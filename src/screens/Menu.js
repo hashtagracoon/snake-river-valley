@@ -18,74 +18,43 @@ export default class Menu extends Component {
           </Body>
         </Header>
 
-          <View style={{ flex: 1, backgroundColor: 'green', alignItems: 'center', justifyContent: 'center' }}>
-            <Text>ok</Text>
-          </View>
-          <View style={{ flex: 2, backgroundColor: 'yellow', alignItems: 'center', justifyContent: 'center' }}>
-            <Text>hi</Text>
-          </View>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', margin: 36 }}>
+          <Button block primary bordered>
+            <Text uppercase={ false }>Most Common 3000 Words</Text>
+          </Button>
+        </View>
+
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', margin: 36 }}>
+          <Button block primary bordered>
+            <Text uppercase={ false }>IELTS 4000 Words</Text>
+          </Button>
+        </View>
+
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', margin: 36 }}>
+          <Button block primary bordered>
+            <Text uppercase={ false }>TOEFL 5000 Words</Text>
+          </Button>
+        </View>
+
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', margin: 36 }}>
+          <Button block primary bordered>
+            <Text uppercase={ false }>GRE 5000 Words</Text>
+          </Button>
+        </View>
+
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', margin: 36 }}>
+          <Button block primary bordered>
+            <Text uppercase={ false }>SAT 3000 Words</Text>
+          </Button>
+        </View>
+
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', margin: 18 }}>
+        </View>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', margin: 18 }}>
+        </View>
 
       </Container>
     );
   }
-/*
-  render() {
-    return (
-      <Container>
 
-        <Header>
-          <Left>
-            <Button transparent>
-              <Icon name="menu" />
-            </Button>
-          </Left>
-          <Body>
-            <Title>Daily Vocabulary</Title>
-          </Body>
-        </Header>
-
-        <Content padder>
-          <Card transparent>
-            <Button block bordered>
-              <Text uppercase={ false }>Most Common 3000 Words</Text>
-            </Button>
-          </Card>
-
-          <Card transparent>
-            <Button block bordered>
-              <Text uppercase={ false }>IELTS 4000 Words</Text>
-            </Button>
-          </Card>
-
-          <Card transparent>
-            <Button block bordered>
-              <Text uppercase={ false }>TOEFL 5000 Words</Text>
-            </Button>
-          </Card>
-
-          <Card transparent>
-            <Button block bordered>
-              <Text uppercase={ false }>GRE 5000 Words</Text>
-            </Button>
-          </Card>
-
-          <Card transparent>
-            <Button block bordered>
-              <Text uppercase={ false }>SAT 3000 Words</Text>
-            </Button>
-          </Card>
-
-          <Card transparent>
-            <CardItem>
-              <Body style={{ flexDirection: "row", justifyContent: "center" }}>
-                <Text>Current Notification Time: 00:00</Text>
-              </Body>
-            </CardItem>
-          </Card>
-        </Content>
-
-      </Container>
-    );
-  }
-  */
 }
