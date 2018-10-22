@@ -9,7 +9,10 @@ export default class Sidebar extends Component {
     isTimePickerPresent: false,
     timer1: null,
     timer2: null,
-    timer3: null
+    timer3: null,
+    switch1: false,
+    switch2: false,
+    switch3: false
   }
 
   showTimePicker = () => {
@@ -32,7 +35,32 @@ export default class Sidebar extends Component {
     this.setState({ timer3 });
   }
 
+  handleSwitch1 = (switch1) => {
+    this.setState({ switch1 });
+  }
+
+  handleSwitch2 = (switch2) => {
+    this.setState({ switch2 });
+  }
+
+  handleSwitch3 = (switch3) => {
+    this.setState({ switch3 });
+  }
+
   render() {
+
+    let notification1 = (this.state.switch1) ?
+      <Icon active name="md-notifications" /> :
+      <Icon active name="md-notifications-off" />;
+
+    let notification2 = (this.state.switch2) ?
+      <Icon active name="md-notifications" /> :
+      <Icon active name="md-notifications-off" />;
+
+    let notification3 = (this.state.switch3) ?
+      <Icon active name="md-notifications" /> :
+      <Icon active name="md-notifications-off" />;
+
     return (
       <Container>
         <Content>
@@ -45,19 +73,21 @@ export default class Sidebar extends Component {
             <ListItem>
               <Left>
                 <Button transparent>
-                  <Icon active name="md-notifications-off" />
+                  { notification1 }
                 </Button>
                 <Text>Notification 1</Text>
               </Left>
               <Right>
-                <Switch value={ false } />
+                <Switch value={ this.state.switch1 } onValueChange={ this.handleSwitch1 }/>
               </Right>
             </ListItem>
 
             <ListItem>
-              <Button onPress={ this.showTimePicker }>
+              <Content>
+              <Button block bordered onPress={ this.showTimePicker }>
                 <Text>Select a Time</Text>
               </Button>
+              </Content>
               <DateTimePicker
                 mode={ 'time' }
                 isVisible={ this.state.isTimePickerPresent }
