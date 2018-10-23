@@ -3,6 +3,7 @@ import { Container, Header, Left, Right, Title, Icon, Content, Card, CardItem, B
 import SplashScreen from 'react-native-splash-screen';
 import Menu from './src/screens/Menu';
 import Sidebar from './src/components/Sidebar';
+import PushNotification from 'react-native-push-notification';
 
 export default class App extends Component {
 
@@ -10,6 +11,12 @@ export default class App extends Component {
     // do stuff while splash screen is shown
     // After having done stuff (such as async tasks) hide the splash screen
     SplashScreen.hide();
+
+    PushNotification.localNotificationSchedule({
+      //... You can use all the options from localNotifications
+      message: "My Notification Message", // (required)
+      date: new Date(Date.now() + (60 * 1000)) // in 60 secs
+    });
   }
 
   render() {
