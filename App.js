@@ -13,9 +13,15 @@ export default class App extends Component {
     SplashScreen.hide();
 
     PushNotification.localNotificationSchedule({
-      //... You can use all the options from localNotifications
-      message: "My Notification Message", // (required)
-      date: new Date(Date.now() + (60 * 1000)) // in 60 secs
+      title: 'word',
+      message: 'meaning meaning meaning meaning meaning meaning meaning meaning meaning',
+      date: new Date(Date.now() + (60 * 1000)), // in 60 secs
+      id: '1000',
+      userInfo: {
+        id: '1000'
+      },
+      number: 0,
+      repeatType: 'minute'
     });
   }
 

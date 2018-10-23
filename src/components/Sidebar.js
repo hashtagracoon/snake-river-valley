@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Container, Content, List, ListItem, Left, Body, Right, Icon, Button, Text, Switch } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import PushNotification from 'react-native-push-notification';
 
 export default class Sidebar extends Component {
 
@@ -47,6 +48,8 @@ export default class Sidebar extends Component {
     });
     this.setState({ switch1: true });
     this.setState({ isTimePickerPresent1: false });
+
+    PushNotification.cancelLocalNotifications({id: '1000'});
   }
 
   handleTimer2 = (timer2) => {
