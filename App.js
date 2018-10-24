@@ -1,9 +1,23 @@
 import React, { Component } from 'react';
-import { Container, Header, Left, Right, Title, Icon, Content, Card, CardItem, Body, Text, Button } from 'native-base';
+import { Root } from 'native-base';
 import SplashScreen from 'react-native-splash-screen';
 import Menu from './src/screens/Menu';
 import Sidebar from './src/components/Sidebar';
 import PushNotification from 'react-native-push-notification';
+import { createStackNavigator } from 'react-navigation';
+import { fromLeft } from 'react-navigation-transitions';
+
+const AppNavigator = createStackNavigator(
+  {
+    Menu: { screen: Menu },
+    Sidebar: { screen: Sidebar }
+  },
+  {
+    initialRouteName: 'Menu',
+    headerMode: 'none',
+    transitionConfig: () => fromLeft()
+  }
+);
 
 export default class App extends Component {
 
@@ -27,7 +41,9 @@ export default class App extends Component {
 
   render() {
     return (
-      <Sidebar />
+      <Root>
+        <AppNavigator />
+      </Root>
     );
   }
 

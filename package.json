@@ -13,7 +13,9 @@
     "react-native-easy-grid": "^0.2.0",
     "react-native-modal-datetime-picker": "^6.0.0",
     "react-native-push-notification": "^3.1.2",
-    "react-native-splash-screen": "^3.1.1"
+    "react-native-splash-screen": "^3.1.1",
+    "react-navigation": "^2.18.1",
+    "react-navigation-transitions": "^1.0.5"
   },
   "devDependencies": {
     "babel-jest": "23.6.0",
