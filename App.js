@@ -7,6 +7,17 @@ import PushNotification from 'react-native-push-notification';
 import { createStackNavigator } from 'react-navigation';
 import { fromLeft } from 'react-navigation-transitions';
 
+let getCustomPushNotification = (handleNotification) => {
+  PushNotification.configure({
+    onNotification: function(notification) {
+      handleNotification(notification);
+    },
+    popInitialNotification: true,
+    requestPermissions: true
+  });
+  return PushNotification;
+}
+
 const AppNavigator = createStackNavigator(
   {
     Menu: { screen: Menu },
@@ -26,7 +37,9 @@ export default class App extends Component {
     // After having done stuff (such as async tasks) hide the splash screen
     SplashScreen.hide();
 
-    PushNotification.localNotificationSchedule({
+    let customPushNotification = getCustomPushNotification(this.handleNotification);
+
+    customPushNotification.localNotificationSchedule({
       title: 'word',
       message: 'meaning meaning meaning meaning meaning meaning meaning meaning meaning',
       date: new Date(Date.now() + (60 * 1000)), // in 60 secs
@@ -37,6 +50,11 @@ export default class App extends Component {
       number: 0,
       repeatType: 'minute'
     });
+  }
+
+  handleNotification = (notification) => {
+    console.log("in handle notification:");
+    console.log(notification);
   }
 
   render() {
