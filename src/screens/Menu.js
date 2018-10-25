@@ -1,15 +1,37 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Container, Header, Left, Right, Title, Icon, Content, Card, CardItem, Body, Text, Button } from 'native-base';
+import { Drawer, Container, Header, Left, Right, Title, Icon, Content, Card, CardItem, Body, Text, Button } from 'native-base';
+import Sidebar from '../components/Sidebar';
+
+Drawer.defaultProps.styles.mainOverlay.elevation = 0;
 
 export default class Menu extends Component {
+
+  openDrawer = () => {
+    this.drawer._root.open();
+  }
+
+  closeDrawer = () => {
+    this.drawer._root.close();
+  }
+
+  menuButtonOnPress = () => {
+    this.openDrawer();
+  }
+
   render() {
     return (
+      <Drawer
+        ref={ (ref) => { this.drawer = ref; } }
+        content={ <Sidebar /> }
+        onClose={ this.closeDrawer }
+      >
+
       <Container>
 
         <Header>
           <Left>
-            <Button transparent>
+            <Button transparent onPress={ this.menuButtonOnPress }>
               <Icon name="menu" />
             </Button>
           </Left>
@@ -54,6 +76,7 @@ export default class Menu extends Component {
         </View>
 
       </Container>
+      </Drawer>
     );
   }
 
