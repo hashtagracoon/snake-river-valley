@@ -19,6 +19,10 @@ export default class Menu extends Component {
     this.openDrawer();
   }
 
+  ieltsButtonOnPress = () => {
+    this.props.navigation.navigate("WordCard");
+  }
+
   render() {
     return (
       <Drawer
@@ -47,7 +51,7 @@ export default class Menu extends Component {
         </View>
 
         <View style={ styles.view }>
-          <Button block primary bordered>
+          <Button block primary bordered onPress={ this.ieltsButtonOnPress }>
             <Text uppercase={ false }>IELTS 4000 Words</Text>
           </Button>
         </View>

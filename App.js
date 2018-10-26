@@ -3,6 +3,7 @@ import { Root } from 'native-base';
 import SplashScreen from 'react-native-splash-screen';
 import Menu from './src/screens/Menu';
 import Sidebar from './src/components/Sidebar';
+import IELTSCard from './src/screens/IELTSCard';
 import PushNotification from 'react-native-push-notification';
 import { createStackNavigator } from 'react-navigation';
 import { fromLeft } from 'react-navigation-transitions';
@@ -21,7 +22,8 @@ let getCustomPushNotification = (handleNotification) => {
 const AppNavigator = createStackNavigator(
   {
     Menu: { screen: Menu },
-    Sidebar: { screen: Sidebar }
+    Sidebar: { screen: Sidebar },
+    IELTSCard: { screen: IELTSCard },
   },
   {
     initialRouteName: 'Menu',
