@@ -4,6 +4,7 @@ import SplashScreen from 'react-native-splash-screen';
 import Menu from './src/screens/Menu';
 import Sidebar from './src/components/Sidebar';
 import IELTSCard from './src/screens/IELTSCard';
+import SATCard from './src/screens/SATCard';
 import PushNotification from 'react-native-push-notification';
 import { createStackNavigator } from 'react-navigation';
 import { fromLeft } from 'react-navigation-transitions';
@@ -24,6 +25,7 @@ const AppNavigator = createStackNavigator(
     Menu: { screen: Menu },
     Sidebar: { screen: Sidebar },
     IELTSCard: { screen: IELTSCard },
+    SATCard: { screen: SATCard }
   },
   {
     initialRouteName: 'Menu',

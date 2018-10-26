@@ -20,7 +20,7 @@ export default class Menu extends Component {
   }
 
   ieltsButtonOnPress = () => {
-    this.props.navigation.navigate("WordCard");
+    this.props.navigation.navigate("IELTSCard");
   }
 
   render() {
