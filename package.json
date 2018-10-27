@@ -16,6 +16,7 @@
     "react-native-splash-screen": "^3.1.1",
     "react-native-swipe-gestures": "^1.0.2",
     "react-navigation": "^2.18.1",
+    "react-navigation-slide-from-right-transition": "^1.0.4",
     "react-navigation-transitions": "^1.0.5"
   },
   "devDependencies": {

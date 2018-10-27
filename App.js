@@ -8,6 +8,7 @@ import SATCard from './src/screens/SATCard';
 import PushNotification from 'react-native-push-notification';
 import { createStackNavigator } from 'react-navigation';
 import { fromLeft } from 'react-navigation-transitions';
+import getSlideFromRightTransition from 'react-navigation-slide-from-right-transition';
 
 let getCustomPushNotification = (handleNotification) => {
   PushNotification.configure({
@@ -20,6 +21,29 @@ let getCustomPushNotification = (handleNotification) => {
   return PushNotification;
 }
 
+const CustomTransitionConfig = () => {
+  return {
+    screenInterpolator: (sceneProps) => {
+      const { scene } = sceneProps;
+      const { route } = scene;
+      const params = route.params || {};
+      const transition = params.transition || null;
+      console.log(scene);
+
+      if(transition === 'fromLeft') {
+        return fromLeft();
+      }
+      else if(transition === 'fromRight') {
+        return getSlideFromRightTransition();
+      }
+      else {
+        return fromLeft();
+      }
+
+    }
+  };
+}
+
 const AppNavigator = createStackNavigator(
   {
     Menu: { screen: Menu },
@@ -30,7 +54,7 @@ const AppNavigator = createStackNavigator(
   {
     initialRouteName: 'Menu',
     headerMode: 'none',
-    transitionConfig: () => fromLeft()
+    transitionConfig: CustomTransitionConfig
   }
 );
 

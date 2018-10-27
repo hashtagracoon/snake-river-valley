@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Drawer, Container, Header, Left, Right, Title, Icon, Content, Card, CardItem, Body, Text, Button } from 'native-base';
 import { ielts } from '../resources/ielts';
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 
 export default class IELTSCard extends Component {
 
@@ -12,8 +12,23 @@ export default class IELTSCard extends Component {
   };
 
   onSwipeLeft(gestureState) {
-    console.log("hello swipe");
-    this.props.navigation.navigate("SATCard");
+    console.log("swipe left");
+    this.props.navigation.navigate({
+      routeName: 'SATCard',
+      params: {
+        transition: 'fromLeft'
+      }
+    });
+  }
+
+  onSwipeRight(hestureState) {
+    console.log('swipe right');
+    this.props.navigation.navigate({
+      routeName: 'SATCard',
+      params: {
+        transition: 'fromRight'
+      }
+    });
   }
 
   render() {
@@ -21,6 +36,7 @@ export default class IELTSCard extends Component {
 
       <GestureRecognizer
         onSwipeLeft={(state) => this.onSwipeLeft(state)}
+        onSwipeRight={(state) => this.onSwipeRight(state)}
         config={ this.gestureConfig }
         style={{
           flex: 1
