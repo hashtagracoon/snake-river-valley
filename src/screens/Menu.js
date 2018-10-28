@@ -19,8 +19,24 @@ export default class Menu extends Component {
     this.openDrawer();
   }
 
+  mostCommonOnPress = () => {
+    this.props.navigation.navigate('MostCommonCard');
+  }
+
   ieltsButtonOnPress = () => {
-    this.props.navigation.navigate("IELTSCard");
+    this.props.navigation.navigate('IELTSCard');
+  }
+
+  toeflButtonOnPress = () => {
+    this.props.navigation.navigate('TOEFLCard');
+  }
+
+  greButtonOnPress = () => {
+    this.props.navigation.navigate('GRECard');
+  }
+
+  satButtonOnPress = () => {
+    this.props.navigation.navigate('SATCard');
   }
 
   render() {
@@ -45,7 +61,7 @@ export default class Menu extends Component {
         </Header>
 
         <View style={ styles.view }>
-          <Button block primary bordered>
+          <Button block primary bordered onPress={ this.mostCommonOnPress }>
             <Text uppercase={ false }>Most Common 3000 Words</Text>
           </Button>
         </View>
@@ -57,19 +73,19 @@ export default class Menu extends Component {
         </View>
 
         <View style={ styles.view }>
-          <Button block primary bordered>
+          <Button block primary bordered onPress={ this.toeflButtonOnPress }>
             <Text uppercase={ false }>TOEFL 5000 Words</Text>
           </Button>
         </View>
 
         <View style={ styles.view }>
-          <Button block primary bordered>
+          <Button block primary bordered onPress={ this.greButtonOnPress }>
             <Text uppercase={ false }>GRE 5000 Words</Text>
           </Button>
         </View>
 
         <View style={ styles.view }>
-          <Button block primary bordered>
+          <Button block primary bordered onPress={ this.satButtonOnPress }>
             <Text uppercase={ false }>SAT 3000 Words</Text>
           </Button>
         </View>

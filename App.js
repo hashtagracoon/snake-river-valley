@@ -3,7 +3,10 @@ import { Root } from 'native-base';
 import SplashScreen from 'react-native-splash-screen';
 import Menu from './src/screens/Menu';
 import Sidebar from './src/components/Sidebar';
+import MostCommonCard from './src/screens/MostCommonCard';
 import IELTSCard from './src/screens/IELTSCard';
+import TOEFLCard from './src/screens/TOEFLCard';
+import GRECard from './src/screens/GRECard';
 import SATCard from './src/screens/SATCard';
 import PushNotification from 'react-native-push-notification';
 import { createStackNavigator } from 'react-navigation';
@@ -48,7 +51,10 @@ const AppNavigator = createStackNavigator(
   {
     Menu: { screen: Menu },
     Sidebar: { screen: Sidebar },
+    MostCommonCard: { screen: MostCommonCard },
     IELTSCard: { screen: IELTSCard },
+    TOEFLCard: { screen: TOEFLCard },
+    GRECard: { screen: GRECard },
     SATCard: { screen: SATCard }
   },
   {
