@@ -13,6 +13,8 @@ import { createStackNavigator } from 'react-navigation';
 import { fromLeft } from 'react-navigation-transitions';
 import getSlideFromRightTransition from 'react-navigation-slide-from-right-transition';
 
+let SQLite = require('react-native-sqlite-storage');
+
 let getCustomPushNotification = (handleNotification) => {
   PushNotification.configure({
     onNotification: function(notification) {
@@ -31,7 +33,7 @@ const CustomTransitionConfig = () => {
       const { route } = scene;
       const params = route.params || {};
       const transition = params.transition || null;
-      console.log(scene);
+      //console.log(scene);
 
       if(transition === 'fromLeft') {
         return fromLeft();
@@ -66,7 +68,41 @@ const AppNavigator = createStackNavigator(
 
 export default class App extends Component {
 
+  errorCB(err) {
+    console.log("SQL Error: " + err);
+  }
+
+  successCB() {
+    console.log("SQL executed fine");
+  }
+
+  openCB() {
+    console.log("Database OPENED");
+  }
+
   componentDidMount() {
+
+    let db = SQLite.openDatabase({name: 'sqlite-31-full-complete.db', createFromLocation : "~/sqlite-31-full-complete.db", location: 'Library'},
+      () => { console.log('Database Opened!'); },
+      () => { console.log('Try to Open Database, but Fail......'); });
+      
+    console.log('before transaction');
+    db.transaction((tx) => {
+      tx.executeSql(`SELECT * FROM 'words' limit 32`, [], (tx, results) => {
+          console.log("Query completed");
+
+          // Get rows with Web SQL Database spec compliance.
+
+          var len = results.rows.length;
+          for (let i = 0; i < len; i++) {
+            let row = results.rows.item(i);
+            console.log(`Record: ${row.lemma}`);
+            //this.setState({record: row});
+          }
+        });
+    });
+    console.log('after transaction');
+
     // do stuff while splash screen is shown
     // After having done stuff (such as async tasks) hide the splash screen
     SplashScreen.hide();
@@ -88,7 +124,7 @@ export default class App extends Component {
 
   handleNotification = (notification) => {
     console.log("in handle notification:");
-    console.log(notification);
+    //console.log(notification);
   }
 
   render() {
