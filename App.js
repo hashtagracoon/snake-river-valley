@@ -12,6 +12,8 @@ import PushNotification from 'react-native-push-notification';
 import { createStackNavigator } from 'react-navigation';
 import { fromLeft } from 'react-navigation-transitions';
 import getSlideFromRightTransition from 'react-navigation-slide-from-right-transition';
+import { Provider } from 'react-redux';
+import { store } from './src/redux/Store';
 
 let SQLite = require('react-native-sqlite-storage');
 
@@ -85,7 +87,7 @@ export default class App extends Component {
     let db = SQLite.openDatabase({name: 'sqlite-31-full-complete.db', createFromLocation : "~/sqlite-31-full-complete.db", location: 'Library'},
       () => { console.log('Database Opened!'); },
       () => { console.log('Try to Open Database, but Fail......'); });
-      
+
     console.log('before transaction');
     db.transaction((tx) => {
       tx.executeSql(`SELECT * FROM 'words' limit 32`, [], (tx, results) => {
@@ -129,9 +131,11 @@ export default class App extends Component {
 
   render() {
     return (
-      <Root>
-        <AppNavigator />
-      </Root>
+      <Provider store={ store }>
+        <Root>
+          <AppNavigator />
+        </Root>
+      </Provider>
     );
   }
 
