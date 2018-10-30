@@ -3,8 +3,26 @@ import { View, StyleSheet } from 'react-native';
 import { Drawer, Container, Header, Left, Right, Title, Icon, Content, Card, CardItem, Body, Text, Button } from 'native-base';
 import { ielts } from '../resources/ielts';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
+import { connect } from 'react-redux';
 
-export default class IELTSCard extends Component {
+class IELTSCard extends Component {
+
+  componentWillMount = () => {
+    this.props.dbInstance.transaction((tx) => {
+      tx.executeSql(`SELECT * FROM 'words' where lemma like 'abs%' limit 32`, [], (tx, results) => {
+          console.log("Query completed");
+
+          // Get rows with Web SQL Database spec compliance.
+
+          var len = results.rows.length;
+          for (let i = 0; i < len; i++) {
+            let row = results.rows.item(i);
+            console.log(`Record: ${row.lemma}`);
+            //this.setState({record: row});
+          }
+        });
+    });
+  }
 
   gestureConfig = {
     velocityThreshold: 0.3,
@@ -60,3 +78,12 @@ export default class IELTSCard extends Component {
   }
 
 }
+
+export default connect(
+  (state) => {
+    return {
+      dbInstance: state.dbState.dbInstance
+    };
+  },
+  null
+)(IELTSCard);
