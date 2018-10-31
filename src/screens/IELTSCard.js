@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { Drawer, Container, Header, Left, Right, Title, Icon, Content, Card, CardItem, Body, Text, Button } from 'native-base';
 import { ielts } from '../resources/ielts';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import DatabaseSearcher from '../api/DatabaseSearcher';
 import to from '../api/To';
 import { logger } from '../api/Debugger';
+import Sound from 'react-native-sound';
 
 class IELTSCard extends Component {
 
@@ -75,7 +76,7 @@ class IELTSCard extends Component {
   renderWaitingView = () => {
     return (
       <Content padder contentContainerStyle={{ justifyContent: "center", flex: 1 }}>
-        <Text>wait...</Text>
+        <ActivityIndicator size="large" color="#0000ff" />
       </Content>
     );
   }
