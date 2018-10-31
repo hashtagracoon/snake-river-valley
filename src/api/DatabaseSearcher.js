@@ -15,8 +15,12 @@ module.exports = {
         tx.executeSql(
           sql,
           [word],
-          (_, { rows: { _array } }) => {
-            searchResultArray = _array;
+          (_, res) => {
+            logger(res);
+            logger(res.rows);
+            for(let i = 0;i < res.rows.length; i++) {
+              searchResultArray.push(res.rows.item(i));
+            }
             logger("search in database ok");
             logger(searchResultArray);
           }
@@ -34,10 +38,20 @@ module.exports = {
         else {
           logger("resolve");
           logger(searchResultArray);
-          searchResultArray.map(async entry => {
+          searchResultArray.map(entry => {
+
             // Process title
             entry.title = entry.lemma;
             delete entry.lemma;
+
+            // Process source
+            if(!entry.gram && !entry.pos) {
+              entry.from = 'Wikipedia';
+            }
+            else {
+              entry.from = 'Cambridge';
+            }
+
             // Process meanings
             entry.meanings = entry.meanings.split("|||");
             if(!entry.meanings[entry.meanings.length - 1]) {
