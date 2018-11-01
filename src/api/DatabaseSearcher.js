@@ -44,6 +44,9 @@ module.exports = {
             entry.title = entry.lemma;
             delete entry.lemma;
 
+            // Process mp3
+            entry.mp3 = 'https://dictionary.cambridge.org/media/english/uk_pron/u/uka/ukada/ukadapt021.mp3';
+
             // Process source
             if(!entry.gram && !entry.pos) {
               entry.from = 'Wikipedia';

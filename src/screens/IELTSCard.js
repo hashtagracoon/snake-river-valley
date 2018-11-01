@@ -59,6 +59,19 @@ class IELTSCard extends Component {
   }
 
   playTrack = (url) => {
+
+    const callback = (error, sound) => {
+      if (error) {
+        logger(error.message);
+        return;
+      }
+
+      sound.play(() => {
+        sound.release();
+      });
+    };
+
+    const sound = new Sound(url, null, error => callback(error, sound));
 /*
     let soundObject = new Audio.Sound();
 
