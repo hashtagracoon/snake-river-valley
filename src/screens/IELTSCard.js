@@ -8,16 +8,23 @@ import DatabaseSearcher from '../api/DatabaseSearcher';
 import to from '../api/To';
 import { logger } from '../api/Debugger';
 import Sound from 'react-native-sound';
+import WordIndexer from '../asyncstorage/WordIndex';
+
+const length = 4320;
 
 class IELTSCard extends Component {
 
   state = {
-    data: null
+    data: null,
+    index: 0
   }
 
-  searchForWord = async () => {
-    let [err, data] = await to(DatabaseSearcher.searchDatabase(ielts[13], this.props.dbInstance));
-    logger('await search for wrod done !');
+  searchForWord = async (index) => {
+    logger('index = ' + index);
+    logger(index);
+    logger('word = ' + ielts[index]);
+    let [err, data] = await to(DatabaseSearcher.searchDatabase(ielts[index], this.props.dbInstance));
+    logger('await search for word done !');
     logger("err = " + err);
     logger("data = ");
     logger(data);
@@ -29,8 +36,10 @@ class IELTSCard extends Component {
     }
   }
 
-  componentWillMount = () => {
-    this.searchForWord();
+  componentWillMount = async () => {
+    const index = await WordIndexer.getWordIndex('ielts');
+    this.setState({ index });
+    this.searchForWord(index);
   }
 
   gestureConfig = {
@@ -40,6 +49,8 @@ class IELTSCard extends Component {
 
   onSwipeLeft(gestureState) {
     console.log("swipe left");
+    let tempIndex = (this.state.index + 1 >= length) ? this.state.index : this.state.index + 1;
+    WordIndexer.setWordIndex('ielts', tempIndex);
     this.props.navigation.navigate({
       routeName: 'SATCard',
       params: {
@@ -50,6 +61,8 @@ class IELTSCard extends Component {
 
   onSwipeRight(hestureState) {
     console.log('swipe right');
+    let tempIndex = (this.state.index - 1 <= 0) ? this.state.index : this.state.index - 1;
+    WordIndexer.setWordIndex('ielts', tempIndex);
     this.props.navigation.navigate({
       routeName: 'SATCard',
       params: {
@@ -72,18 +85,6 @@ class IELTSCard extends Component {
     };
 
     const sound = new Sound(url, null, error => callback(error, sound));
-/*
-    let soundObject = new Audio.Sound();
-
-    try {
-      soundObject.loadAsync({ uri: "https://dictionary.cambridge.org" + url })
-      .then(() => {
-        soundObject.playAsync();
-      });
-    }
-    catch(err) {
-      logger(err);
-    }*/
   }
 
   renderWaitingView = () => {
