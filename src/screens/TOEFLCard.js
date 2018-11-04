@@ -3,6 +3,9 @@ import { View, StyleSheet } from 'react-native';
 import { Drawer, Container, Header, Left, Right, Title, Icon, Content, Card, CardItem, Body, Text, Button } from 'native-base';
 import { toefl } from '../resources/toefl';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
+import { StackActions, NavigationActions } from 'react-navigation';
+
+const length = 4845;
 
 export default class TOEFLCard extends Component {
 

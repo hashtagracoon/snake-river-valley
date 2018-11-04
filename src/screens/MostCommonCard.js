@@ -3,6 +3,9 @@ import { View, StyleSheet } from 'react-native';
 import { Drawer, Container, Header, Left, Right, Title, Icon, Content, Card, CardItem, Body, Text, Button } from 'native-base';
 import { mostCommon } from '../resources/mostCommon';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
+import { StackActions, NavigationActions } from 'react-navigation';
+
+const length = 2999;
 
 export default class MostCommonCard extends Component {
 

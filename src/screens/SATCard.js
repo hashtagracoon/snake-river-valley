@@ -3,6 +3,9 @@ import { View, StyleSheet } from 'react-native';
 import { Drawer, Container, Header, Left, Right, Title, Icon, Content, Card, CardItem, Body, Text, Button } from 'native-base';
 import { sat } from '../resources/sat';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
+import { StackActions, NavigationActions } from 'react-navigation';
+
+const length = 2664;
 
 export default class SATCard extends Component {
 
@@ -13,22 +16,36 @@ export default class SATCard extends Component {
 
   onSwipeLeft(gestureState) {
     console.log("swipe left");
-    this.props.navigation.navigate({
-      routeName: 'IELTSCard',
-      params: {
-        transition: 'fromLeft'
-      }
+
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [ NavigationActions.navigate({
+        routeName: "IELTSCard",
+        params: {
+          transition: 'fromLeft'
+        }
+      }) ],
+      key: null
     });
+
+    this.props.navigation.dispatch(resetAction);
   }
 
   onSwipeRight(hestureState) {
     console.log('swipe right');
-    this.props.navigation.navigate({
-      routeName: 'IELTSCard',
-      params: {
-        transition: 'fromRight'
-      }
+
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [ NavigationActions.navigate({
+        routeName: "IELTSCard",
+        params: {
+          transition: 'fromRight'
+        }
+      }) ],
+      key: null
     });
+
+    this.props.navigation.dispatch(resetAction);
   }
 
   render() {

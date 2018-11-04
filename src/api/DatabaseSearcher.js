@@ -21,8 +21,8 @@ module.exports = {
             for(let i = 0;i < res.rows.length; i++) {
               searchResultArray.push(res.rows.item(i));
             }
-            logger("search in database ok");
-            logger(searchResultArray);
+            //logger("search in database ok");
+            //logger(searchResultArray);
           }
         );
       },

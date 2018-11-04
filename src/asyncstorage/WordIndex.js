@@ -5,6 +5,7 @@ module.exports = {
 
   setWordIndex: async (type, index) => {
     let err = null, data = null;
+    index = index.toString();
     switch(type) {
       case 'mostCommon':
         [err, data] = await to(AsyncStorage.setItem('mostCommon', index));
@@ -28,6 +29,10 @@ module.exports = {
     if(err) {
       console.log('asyncstorage setitem error:');
       console.log(err);
+    }
+    else {
+      console.log('asyncstorage setitem success');
+      console.log('data = ' + index);
     }
   },
 
@@ -61,6 +66,7 @@ module.exports = {
       console.log('data = ');
       console.log(data);
       data = (!data) ? 0 : data;
+      data = parseInt(data);
       console.log(data);
       return data;
     }

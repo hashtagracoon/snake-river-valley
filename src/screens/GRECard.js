@@ -3,6 +3,9 @@ import { View, StyleSheet } from 'react-native';
 import { Drawer, Container, Header, Left, Right, Title, Icon, Content, Card, CardItem, Body, Text, Button } from 'native-base';
 import { gre } from '../resources/gre';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
+import { StackActions, NavigationActions } from 'react-navigation';
+
+const length = 4910;
 
 export default class GRECard extends Component {
 

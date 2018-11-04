@@ -9,8 +9,8 @@ import to from '../api/To';
 import { logger } from '../api/Debugger';
 import Sound from 'react-native-sound';
 import WordIndexer from '../asyncstorage/WordIndex';
-
-const length = 4320;
+import { StackActions, NavigationActions } from 'react-navigation';
+import Constants from '../asyncstorage/Constants';
 
 class IELTSCard extends Component {
 
@@ -20,6 +20,20 @@ class IELTSCard extends Component {
   }
 
   searchForWord = async (index) => {
+
+    for(let i = 0; i < Constants.wordCacheLength; i++) {
+      console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+      console.log(this.props.wordCache.get(i)[0].title);
+      console.log("-------------------------------------------------------------------------------------------------------");
+      /*
+      if(this.props.wordCache.get(i).title === ielts[index]) {
+        this.setState({ data: this.props.wordCache.get(i) });
+        console.log('CACHE HIT!');
+        return;
+      }
+      */
+    }
+
     logger('index = ' + index);
     logger(index);
     logger('word = ' + ielts[index]);
@@ -49,26 +63,40 @@ class IELTSCard extends Component {
 
   onSwipeLeft(gestureState) {
     console.log("swipe left");
-    let tempIndex = (this.state.index + 1 >= length) ? this.state.index : this.state.index + 1;
+    let tempIndex = (this.state.index + 1 >= Constants.ieltsLength) ? this.state.index : this.state.index + 1;
     WordIndexer.setWordIndex('ielts', tempIndex);
-    this.props.navigation.navigate({
-      routeName: 'SATCard',
-      params: {
-        transition: 'fromLeft'
-      }
+
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [ NavigationActions.navigate({
+        routeName: "IELTSCard",
+        params: {
+          transition: 'fromLeft'
+        }
+      }) ],
+      key: null
     });
+
+    this.props.navigation.dispatch(resetAction);
   }
 
-  onSwipeRight(hestureState) {
+  onSwipeRight(gestureState) {
     console.log('swipe right');
-    let tempIndex = (this.state.index - 1 <= 0) ? this.state.index : this.state.index - 1;
+    let tempIndex = (this.state.index - 1 < 0) ? this.state.index : this.state.index - 1;
     WordIndexer.setWordIndex('ielts', tempIndex);
-    this.props.navigation.navigate({
-      routeName: 'SATCard',
-      params: {
-        transition: 'fromRight'
-      }
+
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [ NavigationActions.navigate({
+        routeName: "IELTSCard",
+        params: {
+          transition: 'fromRight'
+        }
+      }) ],
+      key: null
     });
+
+    this.props.navigation.dispatch(resetAction);
   }
 
   playTrack = (url) => {
@@ -224,6 +252,20 @@ class IELTSCard extends Component {
           >
 
         <Container>
+
+          <Header>
+            <Left style={{ flex: 1 }}>
+              <Button transparent onPress={ this.menuButtonOnPress }>
+                <Icon name="home" />
+              </Button>
+            </Left>
+            <Body style={{ flex: 1, alignItems: 'center' }}>
+              <Text style={{ color: 'white' }}>{this.state.data[0].title}</Text>
+              <Text style={{ color: 'white' }}>{ this.state.index + 1 } / { Constants.ieltsLength }</Text>
+            </Body>
+            <Right style={{ flex: 1 }}></Right>
+          </Header>
+
           <Content padder>
 
           { this.renderMainEntries(data) }
@@ -252,6 +294,19 @@ class IELTSCard extends Component {
         <Container>
           <Content padder>
 
+          <Header>
+            <Left style={{ flex: 1 }}>
+              <Button transparent onPress={ this.menuButtonOnPress }>
+                <Icon name="home" />
+              </Button>
+            </Left>
+            <Body style={{ flex: 1, alignItems: 'center' }}>
+              <Text style={{ color: 'white' }}>{this.state.data[0].title}</Text>
+              <Text style={{ color: 'white' }}>{ this.state.index + 1 } / { length }</Text>
+            </Body>
+            <Right style={{ flex: 1 }}></Right>
+          </Header>
+
           { this.renderWikipediaSummary(data) }
 
           { this.renderAds() }
@@ -264,47 +319,13 @@ class IELTSCard extends Component {
     }
   }
 
-
-/*
-  render() {
-
-    const data = this.state.data;
-
-    return (
-
-      <GestureRecognizer
-        onSwipeLeft={(state) => this.onSwipeLeft(state)}
-        onSwipeRight={(state) => this.onSwipeRight(state)}
-        config={ this.gestureConfig }
-        style={{
-          flex: 1
-        }}
-        >
-
-      <Container>
-
-        <Content>
-
-          <Text>{ ielts[0] }</Text>
-          <Text>{ ielts[1] }</Text>
-          <Text>{ ielts[2] }</Text>
-
-        </Content>
-
-      </Container>
-
-      </GestureRecognizer>
-    );
-  }
-
-  */
-
 }
 
 export default connect(
   (state) => {
     return {
-      dbInstance: state.dbState.dbInstance
+      dbInstance: state.dbState.dbInstance,
+      wordCache: state.wordCacheState.ieltsCache
     };
   },
   null

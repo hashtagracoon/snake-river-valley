@@ -13,9 +13,14 @@ import { createStackNavigator } from 'react-navigation';
 import { fromLeft } from 'react-navigation-transitions';
 import getSlideFromRightTransition from 'react-navigation-slide-from-right-transition';
 import { connect } from 'react-redux';
-import { setDbInstance } from "../redux/Actions";
+import { setDbInstance, setWordCache } from "../redux/Actions";
 import SQLite from 'react-native-sqlite-storage';
 SQLite.enablePromise(true);
+import DatabaseSearcher from '../api/DatabaseSearcher';
+import to from '../api/To';
+import WordIndexer from '../asyncstorage/WordIndex';
+import Constants from '../asyncstorage/Constants';
+import { ielts } from '../resources/ielts';
 
 let getCustomPushNotification = (handleNotification) => {
   PushNotification.configure({
@@ -86,24 +91,35 @@ class Setup extends Component {
   componentDidMount() {
 
     SQLite.openDatabase({name: 'sqlite-31-full-complete.db', createFromLocation : "~/sqlite-31-full-complete.db", location: 'Library'})
-      .then((db) => {
+      .then( async (db) => {
         console.log('Database Opened!');
         this.props.setDbInstance(db);
         console.log('before transaction');
-        db.transaction((tx) => {
-          tx.executeSql(`SELECT * FROM 'words' limit 32`, [], (tx, results) => {
-              console.log("Query completed");
 
-              // Get rows with Web SQL Database spec compliance.
+        const mostCommonIndex = WordIndexer.getWordIndex('mostCommon');
+        const ieltsIndex = await WordIndexer.getWordIndex('ielts');
+        const toeflIndex = WordIndexer.getWordIndex('toefl');
+        const greIndex = WordIndexer.getWordIndex('gre');
+        const satIndex = WordIndexer.getWordIndex('sat');
 
-              var len = results.rows.length;
-              for (let i = 0; i < len; i++) {
-                let row = results.rows.item(i);
-                console.log(`Record: ${row.lemma}`);
-                //this.setState({record: row});
-              }
-            });
-        });
+        console.log("ieltsIndex = ");
+        console.log(Number(ieltsIndex));
+        console.log("cahce helf length = " + Constants.wordCacheHalfLength);
+
+        if(ieltsIndex <= Constants.wordCacheHalfLength) {
+          console.log("oooooooo");
+          for(let i = 0; i < Constants.wordCacheLength; i++) {
+            let [err, data] = await to(DatabaseSearcher.searchDatabase(ielts[i], db));
+            //console.log('aaaaa');
+            //console.log(data);
+            this.props.setWordCache({
+              type: 'IELTS',
+              operation: 'PUSH',
+              content: data
+            })
+          }
+        }
+
         console.log('after transaction');
       })
       .catch((err) => {
@@ -147,6 +163,7 @@ class Setup extends Component {
 export default connect(
   null,
   {
-    setDbInstance: setDbInstance
+    setDbInstance: setDbInstance,
+    setWordCache: setWordCache
   }
 )(Setup);
