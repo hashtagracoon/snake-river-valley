@@ -21,6 +21,7 @@ import to from '../api/To';
 import WordIndexer from '../asyncstorage/WordIndex';
 import Constants from '../asyncstorage/Constants';
 import { ielts } from '../resources/ielts';
+import { logger } from '../api/Debugger';
 
 let getCustomPushNotification = (handleNotification) => {
   PushNotification.configure({
@@ -88,43 +89,65 @@ class Setup extends Component {
     this.props.setDbInstance()
   }
 
-  componentDidMount() {
+  openDatabase = async () => {
+    let [err, db] = await to(SQLite.openDatabase({name: 'sqlite-31-full-complete.db', createFromLocation : "~/sqlite-31-full-complete.db", location: 'Library'}));
+    if(!err) {
+      console.log('Database Opened!');
+      this.props.setDbInstance(db);
+      this.cacheWords(db);
+    }
+    else {
+      console.log('Try to Open Database, but Fail......');
+      console.log(err);
+    }
+  }
 
-    SQLite.openDatabase({name: 'sqlite-31-full-complete.db', createFromLocation : "~/sqlite-31-full-complete.db", location: 'Library'})
-      .then( async (db) => {
-        console.log('Database Opened!');
-        this.props.setDbInstance(db);
-        console.log('before transaction');
+  cacheWords = async (db) => {
+    const mostCommonIndex = await WordIndexer.getWordIndex('mostCommon');
+    const ieltsIndex = await WordIndexer.getWordIndex('ielts');
+    const toeflIndex = await WordIndexer.getWordIndex('toefl');
+    const greIndex = await WordIndexer.getWordIndex('gre');
+    const satIndex = await WordIndexer.getWordIndex('sat');
 
-        const mostCommonIndex = WordIndexer.getWordIndex('mostCommon');
-        const ieltsIndex = await WordIndexer.getWordIndex('ielts');
-        const toeflIndex = WordIndexer.getWordIndex('toefl');
-        const greIndex = WordIndexer.getWordIndex('gre');
-        const satIndex = WordIndexer.getWordIndex('sat');
+    console.log("ieltsIndex = ");
+    console.log(Number(ieltsIndex));
+    console.log("cahce helf length = " + Constants.wordCacheHalfLength);
 
-        console.log("ieltsIndex = ");
-        console.log(Number(ieltsIndex));
-        console.log("cahce helf length = " + Constants.wordCacheHalfLength);
+    if(ieltsIndex <= Constants.wordCacheHalfLength) {
+      for(let i = 0; i < Constants.wordCacheLength; i++) {
+        let [err, data] = await to(DatabaseSearcher.searchDatabase(ielts[i], db));
+        this.props.setWordCache({
+          type: 'ielts',
+          operation: 'PUSH',
+          content: data
+        });
+      }
+    }
+    else if(ieltsIndex + Constants.wordCacheHalfLength >= Constants.ieltsLength) {
+      for(let i = Constants.ieltsLength - 1; i >= Constants.ieltsLength - Constants.wordCacheLength; i--) {
+        let [err, data] = await to(DatabaseSearcher.searchDatabase(ielts[i], db));
+        this.props.setWordCache({
+          type: 'ielts',
+          operation: 'UNSHIFT',
+          content: data
+        });
+      }
+    }
+    else {
+      for(let i = ieltsIndex - Constants.wordCacheHalfLength; i < ieltsIndex + Constants.wordCacheLength; i++) {
+        let [err, data] = await to(DatabaseSearcher.searchDatabase(ielts[i], db));
+        this.props.setWordCache({
+          type: 'ielts',
+          operation: 'PUSH',
+          content: data
+        });
+      }
+    }
+  }
 
-        if(ieltsIndex <= Constants.wordCacheHalfLength) {
-          console.log("oooooooo");
-          for(let i = 0; i < Constants.wordCacheLength; i++) {
-            let [err, data] = await to(DatabaseSearcher.searchDatabase(ielts[i], db));
-            //console.log('aaaaa');
-            //console.log(data);
-            this.props.setWordCache({
-              type: 'IELTS',
-              operation: 'PUSH',
-              content: data
-            })
-          }
-        }
+  async componentDidMount() {
 
-        console.log('after transaction');
-      })
-      .catch((err) => {
-        console.log('Try to Open Database, but Fail......');
-      });
+    await this.openDatabase();
 
     // do stuff while splash screen is shown
     // After having done stuff (such as async tasks) hide the splash screen

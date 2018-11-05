@@ -13,19 +13,19 @@ const wordCacheInitialState = {
 
 const handleWordCacheType = (wordCache, state) => {
   switch(wordCache.type) {
-    case "MOST_COMMON":
+    case "mostCommon":
       handleWordCacheOperation(wordCache, state.mostCommonCache);
       break;
-    case "IELTS":
+    case "ielts":
       handleWordCacheOperation(wordCache, state.ieltsCache);
       break;
-    case "TOEFL":
+    case "toefl":
       handleWordCacheOperation(wordCache, state.toeflCache);
       break;
-    case "GRE":
+    case "gre":
       handleWordCacheOperation(wordCache, state.greCache);
       break;
-    case "SAT":
+    case "sat":
       handleWordCacheOperation(wordCache, state.satCache);
       break;
     default: break;

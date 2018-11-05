@@ -22,16 +22,16 @@ class IELTSCard extends Component {
   searchForWord = async (index) => {
 
     for(let i = 0; i < Constants.wordCacheLength; i++) {
-      console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-      console.log(this.props.wordCache.get(i)[0].title);
-      console.log("-------------------------------------------------------------------------------------------------------");
-      /*
-      if(this.props.wordCache.get(i).title === ielts[index]) {
+      //console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+      //console.log(this.props.wordCache.get(i)[0].title);
+      //console.log("-------------------------------------------------------------------------------------------------------");
+
+      if(this.props.wordCache.get(i)[0].title === ielts[index]) {
         this.setState({ data: this.props.wordCache.get(i) });
         console.log('CACHE HIT!');
         return;
       }
-      */
+
     }
 
     logger('index = ' + index);
