@@ -1,65 +1,82 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, FlatList } from 'react-native';
 import { Drawer, Container, Header, Left, Right, Title, Icon, Content, Card, CardItem, Body, Text, Button } from 'native-base';
 import { toefl } from '../resources/toefl';
+import { connect } from 'react-redux';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import { StackActions, NavigationActions } from 'react-navigation';
 
 const length = 4845;
 
-export default class TOEFLCard extends Component {
+class TOEFLCard extends Component {
 
-  gestureConfig = {
-    velocityThreshold: 0.3,
-    directionalOffsetThreshold: 80
-  };
+  state = {
+    data: [{index: 1, name:'a'}, {index: 2, name:'b'}, {index: 3, name:'c'}, {index: 4, name:'d'}, {index: 5, name:'e'}]
+  }
 
-  onSwipeLeft(gestureState) {
-    console.log("swipe left");
-    this.props.navigation.navigate({
-      routeName: 'SATCard',
-      params: {
-        transition: 'fromLeft'
-      }
+  _renderItem = (item) => {
+    return (
+      <View>
+      <Text>{ item.index }</Text>
+      <Text>{ item.name }</Text>
+      </View>
+    );
+  }
+
+  _keyExtractor = (item) => {
+    return item.index;
+  }
+
+  _onEndReached = () => {
+    console.log('get new data!');
+    let newDataIndex = this.state.data[this.state.data.length - 1].index + 1;
+    this.setState({
+      data: this.state.data.concat([{ index: newDataIndex, name: 'n' }])
     });
   }
 
-  onSwipeRight(hestureState) {
-    console.log('swipe right');
-    this.props.navigation.navigate({
-      routeName: 'SATCard',
-      params: {
-        transition: 'fromRight'
-      }
-    });
+  _onScroll = ({ nativeEvent }) => {
+    if (nativeEvent.contentOffset.x === 0) {
+      console.log('reach beginning@@');
+      let newDataIndex = this.state.data[0].index - 1;
+      this.setState({
+        data: [{ index: newDataIndex, name: 'm' }].concat(this.state.data)
+      }, () => { console.log(this.state.data); });
+    }
   }
 
   render() {
     return (
 
-      <GestureRecognizer
-        onSwipeLeft={(state) => this.onSwipeLeft(state)}
-        onSwipeRight={(state) => this.onSwipeRight(state)}
-        config={ this.gestureConfig }
-        style={{
-          flex: 1
-        }}
-        >
-
       <Container>
+        <View style={{ flex:1 }}>
 
-        <Content>
+          <FlatList
+          extraData={this.state}
+            horizontal={true}
+            data={this.state.data}
+            renderItem={this._renderItem}
+            keyExtractor={this._keyExtractor}
+            onEndReachedThreshold={ 0.8 }
+            onEndReached = { this._onEndReached}
+            onScroll={this._onScroll}
+  scrollEventThrottle={0}
+          />
 
-          <Text>{ toefl[0] }</Text>
-          <Text>{ toefl[1] }</Text>
-          <Text>{ toefl[2] }</Text>
-
-        </Content>
-
+        </View>
       </Container>
 
-      </GestureRecognizer>
     );
   }
 
 }
+
+export default connect(
+  (state) => {
+    return {
+      dbInstance: state.dbState.dbInstance,
+      wordCache: state.wordCacheState.ieltsCache
+    };
+  },
+  null
+)(TOEFLCard);

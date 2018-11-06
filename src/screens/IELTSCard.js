@@ -234,7 +234,20 @@ class IELTSCard extends Component {
     if(!data) {
       return (
         <Container>
+
+        <Header>
+          <Left style={{ flex: 1 }}>
+            <Button transparent onPress={ this.menuButtonOnPress }>
+              <Icon name="home" />
+            </Button>
+          </Left>
+          <Body style={{ flex: 1, alignItems: 'center' }}>
+          </Body>
+          <Right style={{ flex: 1 }}></Right>
+        </Header>
+
           { this.renderWaitingView() }
+
         </Container>
       );
     }
@@ -259,7 +272,7 @@ class IELTSCard extends Component {
                 <Icon name="home" />
               </Button>
             </Left>
-            <Body style={{ flex: 1, alignItems: 'center' }}>
+            <Body style={{ flex: 2, alignItems: 'center' }}>
               <Text style={{ color: 'white' }}>{this.state.data[0].title}</Text>
               <Text style={{ color: 'white' }}>{ this.state.index + 1 } / { Constants.ieltsLength }</Text>
             </Body>
@@ -300,7 +313,7 @@ class IELTSCard extends Component {
                 <Icon name="home" />
               </Button>
             </Left>
-            <Body style={{ flex: 1, alignItems: 'center' }}>
+            <Body style={{ flex: 2, alignItems: 'center' }}>
               <Text style={{ color: 'white' }}>{this.state.data[0].title}</Text>
               <Text style={{ color: 'white' }}>{ this.state.index + 1 } / { length }</Text>
             </Body>
