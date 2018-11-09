@@ -99,11 +99,12 @@ class IELTSCard extends Component {
     this.props.navigation.dispatch(resetAction);
   }
 
-  playTrack = (url) => {
+  playTrack = (mp3) => {
 
     const callback = (error, sound) => {
       if (error) {
-        logger(error.message);
+        logger('play mp3 fail...');
+        logger(error);
         return;
       }
 
@@ -112,7 +113,10 @@ class IELTSCard extends Component {
       });
     };
 
-    const sound = new Sound(url, null, error => callback(error, sound));
+    const sound = new Sound(mp3, Sound.MAIN_BUNDLE, error => callback(error, sound));
+    // e-mail mp3 file needs to be handled
+    // long-term
+    // so-called
   }
 
   renderWaitingView = () => {

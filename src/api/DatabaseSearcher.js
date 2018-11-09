@@ -45,7 +45,8 @@ module.exports = {
             delete entry.lemma;
 
             // Process mp3
-            entry.mp3 = 'https://dictionary.cambridge.org/media/english/uk_pron/u/uka/ukada/ukadapt021.mp3';
+            entry.mp3 = `${entry.title}_${entry.pos}.mp3`;
+            //entry.mp3 = 'https://dictionary.cambridge.org/media/english/uk_pron/u/uka/ukada/ukadapt021.mp3';
 
             // Process source
             if(!entry.gram && !entry.pos) {
