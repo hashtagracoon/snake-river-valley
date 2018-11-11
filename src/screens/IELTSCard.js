@@ -10,6 +10,7 @@ import Sound from 'react-native-sound';
 import WordIndexer from '../asyncstorage/WordIndex';
 import { StackActions, NavigationActions } from 'react-navigation';
 import Constants from '../asyncstorage/Constants';
+import { setAppStatus } from "../redux/Actions";
 
 class IELTSCard extends Component {
 
@@ -35,7 +36,13 @@ class IELTSCard extends Component {
   }
 
   componentWillMount = async () => {
-    const index = await WordIndexer.getWordIndex('ielts');
+    let index = 0;
+    if(this.props.navigation.state.params.index) {
+      index = this.props.navigation.state.params.index;
+    }
+    else {
+      index = await WordIndexer.getWordIndex('ielts');
+    }
     this.setState({ index });
     this.searchForWord(index);
   }
@@ -55,7 +62,6 @@ class IELTSCard extends Component {
   onSwipeLeft(gestureState) {
     logger("<== swipe left");
     let tempIndex = (this.state.index + 1 >= Constants.ieltsLength) ? this.state.index : this.state.index + 1;
-    WordIndexer.setPreWordIndex('ielts_pre', this.state.index);
     WordIndexer.setWordIndex('ielts', tempIndex);
 
     const resetAction = StackActions.reset({
@@ -75,7 +81,6 @@ class IELTSCard extends Component {
   onSwipeRight(gestureState) {
     console.log('==> swipe right');
     let tempIndex = (this.state.index - 1 < 0) ? this.state.index : this.state.index - 1;
-    WordIndexer.setPreWordIndex('ielts_pre', this.state.index);
     WordIndexer.setWordIndex('ielts', tempIndex);
 
     const resetAction = StackActions.reset({
@@ -259,8 +264,11 @@ class IELTSCard extends Component {
 export default connect(
   (state) => {
     return {
-      dbInstance: state.dbState.dbInstance
+      dbInstance: state.dbState.dbInstance,
+      appStatus: state.appState.appStatus
     };
   },
-  null
+  {
+    setAppStatus: setAppStatus
+  }
 )(IELTSCard);

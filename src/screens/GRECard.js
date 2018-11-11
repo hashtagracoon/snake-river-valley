@@ -55,7 +55,6 @@ class GRECard extends Component {
   onSwipeLeft(gestureState) {
     logger("<== swipe left");
     let tempIndex = (this.state.index + 1 >= Constants.greLength) ? this.state.index : this.state.index + 1;
-    WordIndexer.setPreWordIndex('gre_pre', this.state.index);
     WordIndexer.setWordIndex('gre', tempIndex);
 
     const resetAction = StackActions.reset({
@@ -75,7 +74,6 @@ class GRECard extends Component {
   onSwipeRight(gestureState) {
     console.log('==> swipe right');
     let tempIndex = (this.state.index - 1 < 0) ? this.state.index : this.state.index - 1;
-    WordIndexer.setPreWordIndex('gre_pre', this.state.index);
     WordIndexer.setWordIndex('gre', tempIndex);
 
     const resetAction = StackActions.reset({

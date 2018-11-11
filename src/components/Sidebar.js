@@ -3,6 +3,11 @@ import { View, StyleSheet } from 'react-native';
 import { Container, Content, List, ListItem, Left, Body, Right, Icon, Button, Text, Switch } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import PushNotification from 'react-native-push-notification';
+import Constants from '../asyncstorage/Constants';
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
 
 let getCustomPushNotification = (handleNotification) => {
   PushNotification.configure({
@@ -106,7 +111,8 @@ export default class Sidebar extends Component {
 
   handleNotification = (notification) => {
     console.log("in handle notification:");
-    this.props.navigation.navigate('IELTSCard', { index: 10 });
+    let index = getRandomInt(Constants.ieltsLength - 1);
+    this.props.navigation.navigate('IELTSCard', { index: index });
   }
 
   render() {

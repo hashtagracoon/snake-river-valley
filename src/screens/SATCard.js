@@ -55,7 +55,6 @@ class SATCard extends Component {
   onSwipeLeft(gestureState) {
     logger("<== swipe left");
     let tempIndex = (this.state.index + 1 >= Constants.satLength) ? this.state.index : this.state.index + 1;
-    WordIndexer.setPreWordIndex('sat_pre', this.state.index);
     WordIndexer.setWordIndex('sat', tempIndex);
 
     const resetAction = StackActions.reset({
@@ -75,7 +74,6 @@ class SATCard extends Component {
   onSwipeRight(gestureState) {
     console.log('==> swipe right');
     let tempIndex = (this.state.index - 1 < 0) ? this.state.index : this.state.index - 1;
-    WordIndexer.setPreWordIndex('sat_pre', this.state.index);
     WordIndexer.setWordIndex('sat', tempIndex);
 
     const resetAction = StackActions.reset({

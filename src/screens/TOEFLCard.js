@@ -55,7 +55,6 @@ class TOEFLCard extends Component {
   onSwipeLeft(gestureState) {
     logger("<== swipe left");
     let tempIndex = (this.state.index + 1 >= Constants.toeflLength) ? this.state.index : this.state.index + 1;
-    WordIndexer.setPreWordIndex('toefl_pre', this.state.index);
     WordIndexer.setWordIndex('toefl', tempIndex);
 
     const resetAction = StackActions.reset({
@@ -75,7 +74,6 @@ class TOEFLCard extends Component {
   onSwipeRight(gestureState) {
     console.log('==> swipe right');
     let tempIndex = (this.state.index - 1 < 0) ? this.state.index : this.state.index - 1;
-    WordIndexer.setPreWordIndex('toefl_pre', this.state.index);
     WordIndexer.setWordIndex('toefl', tempIndex);
 
     const resetAction = StackActions.reset({

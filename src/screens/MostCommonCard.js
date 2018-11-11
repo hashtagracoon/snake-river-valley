@@ -55,7 +55,6 @@ class MostCommonCard extends Component {
   onSwipeLeft(gestureState) {
     logger("<== swipe left");
     let tempIndex = (this.state.index + 1 >= Constants.mostCommonLength) ? this.state.index : this.state.index + 1;
-    WordIndexer.setPreWordIndex('mostCommon_pre', this.state.index);
     WordIndexer.setWordIndex('mostCommon', tempIndex);
 
     const resetAction = StackActions.reset({
@@ -75,7 +74,6 @@ class MostCommonCard extends Component {
   onSwipeRight(gestureState) {
     console.log('==> swipe right');
     let tempIndex = (this.state.index - 1 < 0) ? this.state.index : this.state.index - 1;
-    WordIndexer.setPreWordIndex('mostCommon_pre', this.state.index);
     WordIndexer.setWordIndex('mostCommon', tempIndex);
 
     const resetAction = StackActions.reset({
