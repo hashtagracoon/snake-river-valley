@@ -7,6 +7,11 @@ module.exports = {
   satLength: 2664,
 
   wordCacheHalfLength: 8,
-  wordCacheLength: 17
+  wordCacheLength: 17,
+
+  gestureConfig: {
+    velocityThreshold: 0.3,
+    directionalOffsetThreshold: 80
+  }
 
 };

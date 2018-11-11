@@ -95,6 +95,8 @@ class Setup extends Component {
       console.log('Database Opened!');
       this.props.setDbInstance(db);
       this.cacheWords(db);
+      SplashScreen.hide();
+      console.log('===================== splash screen closed ========================');
     }
     else {
       console.log('Try to Open Database, but Fail......');
@@ -151,7 +153,6 @@ class Setup extends Component {
 
     // do stuff while splash screen is shown
     // After having done stuff (such as async tasks) hide the splash screen
-    SplashScreen.hide();
 
     let customPushNotification = getCustomPushNotification(this.handleNotification);
 

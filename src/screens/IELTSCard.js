@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
-import { Drawer, Container, Header, Left, Right, Title, Icon, Content, Card, CardItem, Body, Text, Button } from 'native-base';
+import { Container, Header, Left, Right, Title, Icon, Content, Card, CardItem, Body, Text, Button } from 'native-base';
 import { ielts } from '../resources/ielts';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import { connect } from 'react-redux';
@@ -21,33 +20,18 @@ class IELTSCard extends Component {
 
   searchForWord = async (index) => {
 
-    for(let i = 0; i < Constants.wordCacheLength; i++) {
-      //console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-      //console.log(this.props.wordCache.get(i)[0].title);
-      //console.log("-------------------------------------------------------------------------------------------------------");
-
-      if(this.props.wordCache.get(i)[0].title === ielts[index]) {
-        this.setState({ data: this.props.wordCache.get(i) });
-        console.log('CACHE HIT!');
-        return;
-      }
-
-    }
-
-    logger('index = ' + index);
-    logger(index);
-    logger('word = ' + ielts[index]);
+    logger('current index = ' + index);
+    logger('current word = ' + ielts[index]);
     let [err, data] = await to(DatabaseSearcher.searchDatabase(ielts[index], this.props.dbInstance));
     logger('await search for word done !');
-    logger("err = " + err);
-    logger("data = ");
-    logger(data);
 
     if(!err) {
       this.setState({ data });
-      logger("from database:");
-      logger(this.state.data);
     }
+    else {
+      logger('search from database fail...');
+    }
+
   }
 
   componentWillMount = async () => {
@@ -56,14 +40,22 @@ class IELTSCard extends Component {
     this.searchForWord(index);
   }
 
-  gestureConfig = {
-    velocityThreshold: 0.3,
-    directionalOffsetThreshold: 80
-  };
+  menuButtonOnPress = () => {
+    const resetAction = StackActions.reset({
+      index: 0,
+      actions: [ NavigationActions.navigate({
+        routeName: "Menu"
+      }) ],
+      key: null
+    });
+
+    this.props.navigation.dispatch(resetAction);
+  }
 
   onSwipeLeft(gestureState) {
-    console.log("swipe left");
+    logger("<== swipe left");
     let tempIndex = (this.state.index + 1 >= Constants.ieltsLength) ? this.state.index : this.state.index + 1;
+    WordIndexer.setPreWordIndex('ielts_pre', this.state.index);
     WordIndexer.setWordIndex('ielts', tempIndex);
 
     const resetAction = StackActions.reset({
@@ -81,8 +73,9 @@ class IELTSCard extends Component {
   }
 
   onSwipeRight(gestureState) {
-    console.log('swipe right');
+    console.log('==> swipe right');
     let tempIndex = (this.state.index - 1 < 0) ? this.state.index : this.state.index - 1;
+    WordIndexer.setPreWordIndex('ielts_pre', this.state.index);
     WordIndexer.setWordIndex('ielts', tempIndex);
 
     const resetAction = StackActions.reset({
@@ -114,38 +107,27 @@ class IELTSCard extends Component {
     };
 
     const sound = new Sound(mp3, Sound.MAIN_BUNDLE, error => callback(error, sound));
-    // e-mail mp3 file needs to be handled
-    // long-term
-    // so-called
   }
 
-  renderWaitingView = () => {
-    return (
-      <Content padder contentContainerStyle={{ justifyContent: "center", flex: 1 }}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </Content>
-    );
+  renderPron = (pron) => {
+    if(pron !== "") {
+      return (
+        <Text>/{ pron }/</Text>
+      );
+    }
   }
+
+  renderMp3 = (mp3) => {
+    if(mp3 != null) {
+      return (
+        <Button transparent onPress={ () => this.playTrack(mp3) }>
+          <Icon name="ios-volume-up" />
+        </Button>
+      );
+    }
+  };
 
   renderMainEntries = (wordEntries) => {
-
-    const renderPron = (pron) => {
-      if(pron !== "") {
-        return (
-          <Text>/{ pron }/</Text>
-        );
-      }
-    };
-
-    const renderMp3 = (mp3) => {
-      if(mp3 != null) {
-        return (
-          <Button transparent onPress={ () => this.playTrack(mp3) }>
-            <Icon name="ios-volume-up" />
-          </Button>
-        );
-      }
-    };
 
     return (
       wordEntries.map((entry, i) => {
@@ -158,8 +140,8 @@ class IELTSCard extends Component {
 
             <CardItem bordered>
               <Text>{ entry.pos }{ entry.gram }  </Text>
-              { renderPron(entry.pron) }
-              { renderMp3(entry.mp3) }
+              { this.renderPron(entry.pron) }
+              { this.renderMp3(entry.mp3) }
             </CardItem>
 
             { this.renderMeanings(entry.meanings) }
@@ -198,27 +180,6 @@ class IELTSCard extends Component {
     );
   }
 
-  renderWikipediaSummary = (wordEntries) => {
-    return (
-      wordEntries.map((entry, i) => {
-        return (
-          <Card key={ i }>
-            <CardItem header bordered>
-              <Text>{ entry.title }</Text>
-            </CardItem>
-            <CardItem bordered key={ i }>
-              <Body>
-                <Text>
-                  { entry.meanings[0].meaning }
-                </Text>
-              </Body>
-            </CardItem>
-          </Card>
-        );
-      })
-    );
-  }
-
   renderAds = () => {
     /*
     return (
@@ -239,18 +200,16 @@ class IELTSCard extends Component {
       return (
         <Container>
 
-        <Header>
-          <Left style={{ flex: 1 }}>
-            <Button transparent onPress={ this.menuButtonOnPress }>
-              <Icon name="home" />
-            </Button>
-          </Left>
-          <Body style={{ flex: 1, alignItems: 'center' }}>
-          </Body>
-          <Right style={{ flex: 1 }}></Right>
-        </Header>
-
-          { this.renderWaitingView() }
+          <Header>
+            <Left style={{ flex: 1 }}>
+              <Button transparent onPress={ this.menuButtonOnPress }>
+                <Icon name="home" />
+              </Button>
+            </Left>
+            <Body style={{ flex: 1, alignItems: 'center' }}>
+            </Body>
+            <Right style={{ flex: 1 }}></Right>
+          </Header>
 
         </Container>
       );
@@ -262,10 +221,8 @@ class IELTSCard extends Component {
         <GestureRecognizer
           onSwipeLeft={(state) => this.onSwipeLeft(state)}
           onSwipeRight={(state) => this.onSwipeRight(state)}
-          config={ this.gestureConfig }
-          style={{
-            flex: 1
-          }}
+          config={ Constants.gestureConfig }
+          style={{ flex: 1 }}
           >
 
         <Container>
@@ -295,45 +252,6 @@ class IELTSCard extends Component {
         </GestureRecognizer>
       )
     }
-    else if(data[0].from === "Wikipedia") {
-      logger("Can Render Result Now. (from wiki)");
-      //logger(result);
-      return (
-        <GestureRecognizer
-          onSwipeLeft={(state) => this.onSwipeLeft(state)}
-          onSwipeRight={(state) => this.onSwipeRight(state)}
-          config={ this.gestureConfig }
-          style={{
-            flex: 1
-          }}
-          >
-
-        <Container>
-          <Content padder>
-
-          <Header>
-            <Left style={{ flex: 1 }}>
-              <Button transparent onPress={ this.menuButtonOnPress }>
-                <Icon name="home" />
-              </Button>
-            </Left>
-            <Body style={{ flex: 2, alignItems: 'center' }}>
-              <Text style={{ color: 'white' }}>{this.state.data[0].title}</Text>
-              <Text style={{ color: 'white' }}>{ this.state.index + 1 } / { length }</Text>
-            </Body>
-            <Right style={{ flex: 1 }}></Right>
-          </Header>
-
-          { this.renderWikipediaSummary(data) }
-
-          { this.renderAds() }
-
-          </Content>
-        </Container>
-
-        </GestureRecognizer>
-      )
-    }
   }
 
 }
@@ -341,8 +259,7 @@ class IELTSCard extends Component {
 export default connect(
   (state) => {
     return {
-      dbInstance: state.dbState.dbInstance,
-      wordCache: state.wordCacheState.ieltsCache
+      dbInstance: state.dbState.dbInstance
     };
   },
   null

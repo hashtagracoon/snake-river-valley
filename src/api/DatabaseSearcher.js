@@ -11,18 +11,14 @@ module.exports = {
       dbInstance.transaction(tx => {
         logger("search \"" + word + "\" in database");
         let sql = `select * from words where lemma = ?;`;
-        logger("execute sql = " + sql);
         tx.executeSql(
           sql,
           [word],
           (_, res) => {
-            logger(res);
             logger(res.rows);
             for(let i = 0;i < res.rows.length; i++) {
               searchResultArray.push(res.rows.item(i));
             }
-            //logger("search in database ok");
-            //logger(searchResultArray);
           }
         );
       },
@@ -33,11 +29,10 @@ module.exports = {
       () => {
         logger("execute sql success");
         if(searchResultArray.length === 0) {
+          logger("but not found in database");
           reject("Not Found");
         }
         else {
-          logger("resolve");
-          logger(searchResultArray);
           searchResultArray.map(entry => {
 
             // Process title
@@ -45,16 +40,9 @@ module.exports = {
             delete entry.lemma;
 
             // Process mp3
-            entry.mp3 = `${entry.title}_${entry.pos}.mp3`;
+            const prefix = entry.title.replace(/-/g, '_');
+            entry.mp3 = `${prefix}_${entry.pos}.mp3`;
             //entry.mp3 = 'https://dictionary.cambridge.org/media/english/uk_pron/u/uka/ukada/ukadapt021.mp3';
-
-            // Process source
-            if(!entry.gram && !entry.pos) {
-              entry.from = 'Wikipedia';
-            }
-            else {
-              entry.from = 'Cambridge';
-            }
 
             // Process meanings
             entry.meanings = entry.meanings.split("|||");
@@ -67,11 +55,21 @@ module.exports = {
                 egs: []
               };
             }
+
+            // Process source
+            entry.from = 'Wikipedia';
+            if(!entry.gram && !entry.pos) {
+              entry.from = 'Wikipedia';
+              logger(searchResultArray);
+              resolve(searchResultArray);
+            }
+            else {
+              entry.from = 'Cambridge';
+            }
+
             // Process examples
             entry.examples = entry.examples.split("|||");
-            /*if(!entry.examples[entry.examples.length - 1]) {
-              entry.examples.splice(entry.examples.length - 1, 1);
-            }*/
+
             for(let i = 0; i < entry.meanings.length; i++) {
               entry.examples[i] = entry.examples[i].split("###");
               if(!entry.examples[i][entry.examples[i].length - 1]) {
@@ -81,7 +79,6 @@ module.exports = {
             }
             delete entry.examples;
           });
-          logger("after processed");
           logger(searchResultArray);
           resolve(searchResultArray);
         }
