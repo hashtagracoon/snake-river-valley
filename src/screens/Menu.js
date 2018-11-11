@@ -43,7 +43,7 @@ export default class Menu extends Component {
     return (
       <Drawer
         ref={ (ref) => { this.drawer = ref; } }
-        content={ <Sidebar /> }
+        content={ <Sidebar navigation={ this.props.navigation }/> }
         onClose={ this.closeDrawer }
       >
 

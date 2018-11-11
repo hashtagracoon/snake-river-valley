@@ -8,7 +8,6 @@ import IELTSCard from '../screens/IELTSCard';
 import TOEFLCard from '../screens/TOEFLCard';
 import GRECard from '../screens/GRECard';
 import SATCard from '../screens/SATCard';
-import PushNotification from 'react-native-push-notification';
 import { createStackNavigator } from 'react-navigation';
 import { fromLeft } from 'react-navigation-transitions';
 import getSlideFromRightTransition from 'react-navigation-slide-from-right-transition';
@@ -19,17 +18,6 @@ SQLite.enablePromise(true);
 import DatabaseSearcher from '../api/DatabaseSearcher';
 import to from '../api/To';
 import { logger } from '../api/Debugger';
-
-let getCustomPushNotification = (handleNotification) => {
-  PushNotification.configure({
-    onNotification: function(notification) {
-      handleNotification(notification);
-    },
-    popInitialNotification: true,
-    requestPermissions: true
-  });
-  return PushNotification;
-}
 
 const CustomTransitionConfig = () => {
   return {
@@ -90,24 +78,6 @@ class Setup extends Component {
 
     await this.openDatabase();
 
-    let customPushNotification = getCustomPushNotification(this.handleNotification);
-
-    customPushNotification.localNotificationSchedule({
-      title: 'word',
-      message: 'meaning meaning meaning meaning meaning meaning meaning meaning meaning',
-      date: new Date(Date.now() + (60 * 1000)), // in 60 secs
-      id: '1000',
-      userInfo: {
-        id: '1000'
-      },
-      number: 0,
-      repeatType: 'minute'
-    });
-  }
-
-  handleNotification = (notification) => {
-    console.log("in handle notification:");
-    //console.log(notification);
   }
 
   render() {

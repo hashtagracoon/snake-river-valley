@@ -4,6 +4,17 @@ import { Container, Content, List, ListItem, Left, Body, Right, Icon, Button, Te
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import PushNotification from 'react-native-push-notification';
 
+let getCustomPushNotification = (handleNotification) => {
+  PushNotification.configure({
+    onNotification: function(notification) {
+      handleNotification(notification);
+    },
+    popInitialNotification: true,
+    requestPermissions: true
+  });
+  return PushNotification;
+}
+
 export default class Sidebar extends Component {
 
   state = {
@@ -74,6 +85,28 @@ export default class Sidebar extends Component {
 
   handleSwitch3 = (switch3) => {
     this.setState({ switch3 });
+  }
+
+  componentDidMount() {
+
+    let customPushNotification = getCustomPushNotification(this.handleNotification);
+
+    customPushNotification.localNotificationSchedule({
+      title: 'word',
+      message: 'meaning meaning meaning meaning meaning meaning meaning meaning meaning',
+      date: new Date(Date.now() + (10 * 1000)), // in 10 secs
+      id: '1000',
+      userInfo: {
+        id: '1000'
+      },
+      number: 0,
+      repeatType: 'minute'
+    });
+  }
+
+  handleNotification = (notification) => {
+    console.log("in handle notification:");
+    this.props.navigation.navigate('IELTSCard', { index: 10 });
   }
 
   render() {
