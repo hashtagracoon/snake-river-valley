@@ -29,28 +29,47 @@ var parseWebster = (body) => {
 
   let meaningsArray = [];
   const limitLength = 2;
-  // each entry-1, entry-2 is a different pos (verb, noun...)
-  // each .sb is a different meaning
-  $('#dictionary-entry-1 .vg .sb').each(function(i, elem) {
-    for(let i = 0; i < limitLength; i++) {
-      console.log(`<${i}>`);
-      // each .sb-0, .sb-1 is a different sub-meaning
-      let entry = $(this).find(`span.sb-${i}`).find('span .dtText').first().text();
-      entry = entry.split('\n');
-      entry = entry[0];
-      if(entry.startsWith(': ')) entry = entry.slice(2);
-      console.log('meaning: ' + entry);
+  for(let i = 1; i <= limitLength; i++) {
+    // each entry-1, entry-2 is a different pos (verb, noun...)
+    // each .sb is a different meaning
+    console.log('+++++++++++++++++++++++++++++++');
+    let meanings = [];
+    $(`#dictionary-entry-${i} .vg .sb`).each(function(i, elem) {
+      for(let j = 0; j < limitLength; j++) {
+        console.log(`<${j}>`);
+        // each .sb-0, .sb-1 is a different sub-meaning
+        let entry = $(this).find(`span.sb-${j}`).find('span .dtText').first().text();
+        entry = entry.split('\n');
+        entry = entry[0];
+        if(entry.startsWith(': ')) entry = entry.slice(2);
+        console.log('meaning: ' + entry);
       
-      let example = $(this).find(`span.sb-${i} .ex-sent`).text();
-      console.log('example: ' + example);
+        let example = $(this).find(`span.sb-${j} .ex-sent`).text();
+        console.log('example: ' + example);
 
-      console.log('=======');
-    }
-  });
+        meanings.push({meaning: entry, egs: [example]});
 
-  // example sentences
-  // $('#dictionary-entry-1 .vg .sb span.sb-0 .ex-sent') 
-  
+        console.log('=======');
+      }
+    });
+
+    meaningsArray.push(meanings);
+
+  }
+
+  let entries = [];
+  for(let i = 0; i < meaningsArray.length; i++) {
+    entries.push({
+      title: 'word',
+      pron: pronArray[i],
+      mp3: mp3Array[i],
+      pos: posArray[i],
+      gram: null,
+      meanings: meaningsArray[i]
+    });
+  }
+
+  return entries;
 
 };
 
@@ -69,17 +88,21 @@ var searchWebster = (word) => {
     .then((text) => {
 
       let searchResultArray = parseWebster(text);
-/*
+
       if(searchResultArray.length === 0) {
-        logger("Unable to find this word at webster");
+        console.log("Unable to find this word at webster");
         reject("Not Found");
       }
       else {
-        logger("Get Search Result from webster: ")
-        logger(searchResultArray);
+        console.log("Get Search Result from webster: ")
+        console.log(searchResultArray);
+        for(let i = 0; i < searchResultArray.length; i++) {
+          console.log('==== MEANING ====');
+          console.log(searchResultArray[i].meanings);
+        }
         resolve(searchResultArray);
       }
-*/
+
     })
     .catch((err) => {
       console.log("search word from webster error: " + err);
