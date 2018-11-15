@@ -4,6 +4,12 @@ const fetch = require("node-fetch");
 var parseWebster = (body) => {
   let $ = cheerio.load(body);
 
+  let titleArray = [];
+  $('.row.entry-header .hword').each(function(i, elem) {
+    console.log($(this).text());
+    titleArray.push($(this).text());
+  });
+
   let posArray = [];
   $('.row.entry-header span.fl a.important-blue-link').each(function(i, elem) {
     console.log($(this).text());
@@ -47,20 +53,24 @@ var parseWebster = (body) => {
         let example = $(this).find(`span.sb-${j} .ex-sent`).text();
         console.log('example: ' + example);
 
-        meanings.push({meaning: entry, egs: [example]});
+        if(entry) {
+          meanings.push({meaning: entry, egs: [example]});
+        }
 
         console.log('=======');
       }
     });
 
-    meaningsArray.push(meanings);
+    if(meanings.length) {
+      meaningsArray.push(meanings);
+    }
 
   }
 
   let entries = [];
   for(let i = 0; i < meaningsArray.length; i++) {
     entries.push({
-      title: 'word',
+      title: titleArray[i],
       pron: pronArray[i],
       mp3: mp3Array[i],
       pos: posArray[i],
@@ -112,4 +122,4 @@ var searchWebster = (word) => {
   });
 };
 
-searchWebster('address');
+searchWebster('100');
