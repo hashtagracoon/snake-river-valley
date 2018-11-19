@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Container, Content, List, ListItem, Left, Body, Right, Icon, Button, Text, Switch } from 'native-base';
+import { Container, Content, List, ListItem, Left, Body, Right, Icon, Button, Text, Switch, Picker } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import PushNotification from 'react-native-push-notification';
 import Constants from '../asyncstorage/Constants';
@@ -166,10 +166,30 @@ export default class Sidebar extends Component {
     return (
       <Container>
         <Content>
+
           <List>
 
             <ListItem itemDivider>
               <Text>Notification Setup</Text>
+            </ListItem>
+
+            <ListItem picker>
+            <Picker
+              mode="dropdown"
+              iosIcon={<Icon name="ios-arrow-down-outline" />}
+              style={{ width: undefined }}
+              placeholder="Select your SIM"
+              placeholderStyle={{ color: "#bfc6ea" }}
+              placeholderIconColor="#007aff"
+              selectedValue=""
+              onValueChange=""
+            >
+              <Picker.Item label="Wallet" value="key0" />
+              <Picker.Item label="ATM Card" value="key1" />
+              <Picker.Item label="Debit Card" value="key2" />
+              <Picker.Item label="Credit Card" value="key3" />
+              <Picker.Item label="Net Banking" value="key4" />
+            </Picker>
             </ListItem>
 
             <ListItem>

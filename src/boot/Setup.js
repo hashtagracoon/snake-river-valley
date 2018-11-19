@@ -61,7 +61,7 @@ const AppNavigator = createStackNavigator(
 class Setup extends Component {
 
   openDatabase = async () => {
-    let [err, db] = await to(SQLite.openDatabase({name: 'sqlite-31-full-complete.db', createFromLocation : "~/sqlite-31-full-complete.db", location: 'Library'}));
+    let [err, db] = await to(SQLite.openDatabase({name: 'wordlist.db', createFromLocation : "~/wordlist.db", location: 'Library'}));
     if(!err) {
       console.log('Database Opened!');
       this.props.setDbInstance(db);

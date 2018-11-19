@@ -51,10 +51,6 @@ const dbInitialState = {
   dbInstance: null
 };
 
-const appStatusInitialState = {
-  fromNotification: false
-};
-
 const wordCacheReducer = (state = wordCacheInitialState, action) => {
   switch(action.type) {
     case "SET_WORD_CACHE":
@@ -76,17 +72,7 @@ const dbReducer = (state = dbInitialState, action) => {
   }
 };
 
-const appReducer = (state = appStatusInitialState, action) => {
-  switch(action.type) {
-    case "SET_APP_STATUS":
-      return { ...state, appStatus: action.appStatus };
-    default:
-      return state;
-  }
-};
-
 export const reducers = combineReducers({
   wordCacheState: wordCacheReducer,
-  dbState: dbReducer,
-  appState: appReducer
+  dbState: dbReducer
 });

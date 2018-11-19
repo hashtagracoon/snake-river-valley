@@ -11,10 +11,3 @@ export const setDbInstance = (dbInstance) => {
     dbInstance
   };
 };
-
-export const setAppStatus = (appStatus) => {
-  return {
-    type: "SET_APP_STATUS",
-    appStatus
-  };
-};

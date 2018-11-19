@@ -10,7 +10,6 @@ import Sound from 'react-native-sound';
 import WordIndexer from '../asyncstorage/WordIndex';
 import { StackActions, NavigationActions } from 'react-navigation';
 import Constants from '../asyncstorage/Constants';
-import { setAppStatus } from "../redux/Actions";
 
 class IELTSCard extends Component {
 
@@ -37,8 +36,9 @@ class IELTSCard extends Component {
 
   componentWillMount = async () => {
     let index = 0;
-    if(this.props.navigation.state.params.index) {
+    if(this.props.navigation.state.params && this.props.navigation.state.params.index) {
       index = this.props.navigation.state.params.index;
+      WordIndexer.setWordIndex('ielts', index);
     }
     else {
       index = await WordIndexer.getWordIndex('ielts');
@@ -264,11 +264,8 @@ class IELTSCard extends Component {
 export default connect(
   (state) => {
     return {
-      dbInstance: state.dbState.dbInstance,
-      appStatus: state.appState.appStatus
+      dbInstance: state.dbState.dbInstance
     };
   },
-  {
-    setAppStatus: setAppStatus
-  }
+  null
 )(IELTSCard);

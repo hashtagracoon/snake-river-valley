@@ -25,10 +25,13 @@
     "redux": "^4.0.1"
   },
   "devDependencies": {
+    "axios": "^0.18.0",
     "babel-jest": "23.6.0",
+    "cheerio-without-node-native": "^1.0.0-rc.2",
     "jest": "23.6.0",
     "metro-react-native-babel-preset": "0.48.1",
-    "react-test-renderer": "16.6.0-alpha.8af6728"
+    "react-test-renderer": "16.6.0-alpha.8af6728",
+    "sqlite3": "^4.0.4"
   },
   "jest": {
     "preset": "react-native"

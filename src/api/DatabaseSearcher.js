@@ -40,8 +40,9 @@ module.exports = {
             delete entry.lemma;
 
             // Process mp3
-            const prefix = entry.title.replace(/-/g, '_');
-            entry.mp3 = `${prefix}_${entry.pos}.mp3`;
+            const prefix = entry.title.replace(/-/g, '_').toLowerCase();
+            const pos = entry.pos.replace(/ /g, '_').replace(/,/g, '');
+            entry.mp3 = `${prefix}_${pos}.mp3`;
             //entry.mp3 = 'https://dictionary.cambridge.org/media/english/uk_pron/u/uka/ukada/ukadapt021.mp3';
 
             // Process meanings
