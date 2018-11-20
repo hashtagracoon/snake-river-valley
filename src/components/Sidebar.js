@@ -4,6 +4,15 @@ import { Container, Content, List, ListItem, Left, Body, Right, Icon, Button, Te
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import PushNotification from 'react-native-push-notification';
 import Constants from '../asyncstorage/Constants';
+import NotificationType from '../asyncstorage/NotificationType';
+import { mostCommon } from '../resources/mostCommon';
+import { ielts } from '../resources/ielts';
+import { toefl } from '../resources/toefl';
+import { gre } from '../resources/gre';
+import { sat } from '../resources/sat';
+import DatabaseSearcher from '../api/DatabaseSearcher';
+import { connect } from 'react-redux';
+import to from '../api/To';
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
@@ -20,7 +29,7 @@ let getCustomPushNotification = (handleNotification) => {
   return PushNotification;
 }
 
-export default class Sidebar extends Component {
+class Sidebar extends Component {
 
   state = {
     isTimePickerPresent1: false,
@@ -31,7 +40,15 @@ export default class Sidebar extends Component {
     timer3: null,
     switch1: false,
     switch2: false,
-    switch3: false
+    switch3: false,
+
+    selected: 'ielts',
+    index: 0
+  }
+
+  onPickerValueChange = async (selected) => {
+    this.setState({ selected });
+    await NotificationType.setType(selected);
   }
 
   showTimePicker1 = () => {
@@ -92,13 +109,63 @@ export default class Sidebar extends Component {
     this.setState({ switch3 });
   }
 
-  componentDidMount() {
+  async componentDidMount() {
 
     let customPushNotification = getCustomPushNotification(this.handleNotification);
 
+    let notificationType = await NotificationType.getType();
+
+    let index = 0;
+    switch(notificationType) {
+      case 'mostCommon':
+        index = getRandomInt(Constants.mostCommonLength - 1);
+        break;
+      case 'ielts':
+        index = getRandomInt(Constants.ieltsLength - 1);
+        break;
+      case 'toefl':
+        index = getRandomInt(Constants.toeflLength - 1);
+        break;
+      case 'gre':
+        index = getRandomInt(Constants.greLength - 1);
+        break;
+      case 'sat':
+        index = getRandomInt(Constants.satLength - 1);
+        break;
+      default:
+        break;
+    }
+    this.setState({ index });
+
+    let title = '';
+    let message = '';
+    let err = null;
+    let data = null;
+    switch(notificationType) {
+      case 'mostCommon':
+        [err, data] = await to(DatabaseSearcher.searchDatabase(mostCommon[index], this.props.dbInstance));
+        break;
+      case 'ielts':
+        [err, data] = await to(DatabaseSearcher.searchDatabase(ielts[index], this.props.dbInstance));
+        break;
+      case 'toefl':
+        [err, data] = await to(DatabaseSearcher.searchDatabase(toefl[index], this.props.dbInstance));
+        break;
+      case 'gre':
+        [err, data] = await to(DatabaseSearcher.searchDatabase(gre[index], this.props.dbInstance));
+        break;
+      case 'sat':
+        [err, data] = await to(DatabaseSearcher.searchDatabase(sat[index], this.props.dbInstance));
+        break;
+      default:
+        break;
+    }
+    title = data[0].title;
+    message = data[0].meanings[0].meaning;
+
     customPushNotification.localNotificationSchedule({
-      title: 'word',
-      message: 'meaning meaning meaning meaning meaning meaning meaning meaning meaning',
+      title: title,
+      message: message,
       date: new Date(Date.now() + (10 * 1000)), // in 10 secs
       id: '1000',
       userInfo: {
@@ -111,8 +178,8 @@ export default class Sidebar extends Component {
 
   handleNotification = (notification) => {
     console.log("in handle notification:");
-    let index = getRandomInt(Constants.ieltsLength - 1);
-    this.props.navigation.navigate('IELTSCard', { index: index });
+    //let index = getRandomInt(Constants.ieltsLength - 1);
+    this.props.navigation.navigate('IELTSCard', { index: this.state.index });
   }
 
   render() {
@@ -173,23 +240,19 @@ export default class Sidebar extends Component {
               <Text>Notification Setup</Text>
             </ListItem>
 
-            <ListItem picker>
-            <Picker
-              mode="dropdown"
-              iosIcon={<Icon name="ios-arrow-down-outline" />}
-              style={{ width: undefined }}
-              placeholder="Select your SIM"
-              placeholderStyle={{ color: "#bfc6ea" }}
-              placeholderIconColor="#007aff"
-              selectedValue=""
-              onValueChange=""
-            >
-              <Picker.Item label="Wallet" value="key0" />
-              <Picker.Item label="ATM Card" value="key1" />
-              <Picker.Item label="Debit Card" value="key2" />
-              <Picker.Item label="Credit Card" value="key3" />
-              <Picker.Item label="Net Banking" value="key4" />
-            </Picker>
+            <ListItem>
+              <Picker
+                mode="dropdown"
+                iosIcon={<Icon name="ios-arrow-down-outline" />}
+                selectedValue={ this.state.selected }
+                onValueChange={ this.onPickerValueChange }
+                >
+                <Picker.Item label="Most Common" value="mostCommon" />
+                <Picker.Item label="IELTS" value="ielts" />
+                <Picker.Item label="TOEFL" value="toefl" />
+                <Picker.Item label="GRE" value="gre" />
+                <Picker.Item label="SAT" value="sat" />
+              </Picker>
             </ListItem>
 
             <ListItem>
@@ -274,12 +337,24 @@ export default class Sidebar extends Component {
             </ListItem>
 
           </List>
+
+          <View style={{ flex: 1 }}>
+          </View>
         </Content>
       </Container>
     );
   }
 
 }
+
+export default connect(
+  (state) => {
+    return {
+      dbInstance: state.dbState.dbInstance
+    };
+  },
+  null
+)(Sidebar);
 
 const styles = StyleSheet.create({
   view: {
