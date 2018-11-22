@@ -23,16 +23,39 @@ export default class CustomNotification {
     this.index = 0;
   }
 
-  notificationHandler = (notification) => {
+  notificationHandler = async (notification) => {
     console.log("in notification handler:");
     this.cancelNotification();
     const preIndex = this.index;
     this.createNotification();
+
+    let routeName = 'IELTSCard';
+    let notificationType = await NotificationType.getType();
+    switch(notificationType) {
+      case 'mostCommon':
+        routeName = 'MostCommonCard';
+        break;
+      case 'ielts':
+        routeName = 'IELTSCard';
+        break;
+      case 'toefl':
+        routeName = 'TOEFLCard';
+        break;
+      case 'gre':
+        routeName = 'GRECard';
+        break;
+      case 'sat':
+        routeName = 'SATCard';
+        break;
+      default:
+        break;
+    }
+
     //this.navigation.navigate('IELTSCard', { index: preIndex });
     const resetAction = StackActions.reset({
       index: 0,
       actions: [ NavigationActions.navigate({
-        routeName: "IELTSCard",
+        routeName: routeName,
         params: { index: preIndex }
       }) ],
       key: null
