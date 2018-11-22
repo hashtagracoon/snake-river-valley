@@ -23,7 +23,6 @@ class IELTSCard extends Component {
     logger('current index = ' + index);
     logger('current word = ' + ielts[index]);
     let [err, data] = await to(DatabaseSearcher.searchDatabase(ielts[index], this.props.dbInstance));
-    logger('await search for word done !');
 
     if(!err) {
       this.setState({ data });
@@ -219,7 +218,7 @@ class IELTSCard extends Component {
         </Container>
       );
     }
-    else if(data[0].from === "Cambridge") {
+    else {
       logger("Can Render Result Now.");
       logger(data);
       return (

@@ -57,17 +57,6 @@ module.exports = {
               };
             }
 
-            // Process source
-            entry.from = 'Wikipedia';
-            if(!entry.gram && !entry.pos) {
-              entry.from = 'Wikipedia';
-              logger(searchResultArray);
-              resolve(searchResultArray);
-            }
-            else {
-              entry.from = 'Cambridge';
-            }
-
             // Process examples
             entry.examples = entry.examples.split("|||");
 

@@ -16,9 +16,10 @@ const getRandomInt = (max) => {
 
 export default class CustomNotification {
 
-  constructor(navigation, dbInstance) {
+  constructor(navigation, dbInstance, notificationStartTime) {
     this.navigation = navigation;
     this.dbInstance = dbInstance;
+    this.notificationStartTime = notificationStartTime;
 
     this.index = 0;
   }
@@ -51,7 +52,6 @@ export default class CustomNotification {
         break;
     }
 
-    //this.navigation.navigate('IELTSCard', { index: preIndex });
     const resetAction = StackActions.reset({
       index: 0,
       actions: [ NavigationActions.navigate({
@@ -136,7 +136,7 @@ export default class CustomNotification {
     customPushNotification.localNotificationSchedule({
       title: title,
       message: message,
-      date: new Date(Date.now() + (10 * 1000)), // in 10 secs
+      date: this.notificationStartTime,//new Date(Date.now() + (10 * 1000)), // in 10 secs
       id: '1000',
       userInfo: {
         id: '1000'

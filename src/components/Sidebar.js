@@ -3,19 +3,25 @@ import { Container, Content, List, ListItem, Left, Body, Right, Icon, Button, Te
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { connect } from 'react-redux';
 import CustomNotification from '../api/CustomNotification';
+import NotificationType from '../asyncstorage/NotificationType';
+import { logger } from '../api/Debugger';
 
 class Sidebar extends Component {
 
   state = {
     isTimePickerPresent1: false,
-    isTimePickerPresent2: false,
+    //isTimePickerPresent2: false,
     timer1: null,
-    timer2: null,
+    //timer2: null,
     switch1: false,
-    switch2: false,
+    //switch2: false,
 
     selected: 'ielts',
-    index: 0
+  }
+
+  componentWillMount = async () => {
+    let notificationType = await NotificationType.getType();
+    this.setState({ selected: notificationType });
   }
 
   onPickerValueChange = async (selected) => {
@@ -30,7 +36,7 @@ class Sidebar extends Component {
   hideTimePicker1 = () => {
     this.setState({ isTimePickerPresent1: false });
   }
-
+/*
   showTimePicker2 = () => {
     this.setState({ isTimePickerPresent2: true });
   }
@@ -38,35 +44,31 @@ class Sidebar extends Component {
   hideTimePicker2 = () => {
     this.setState({ isTimePickerPresent2: false });
   }
-
+*/
   handleTimer1 = (timer1) => {
     this.setState({ timer1: timer1 }, () => {
-      console.log(this.state.timer1);
+      logger(this.state.timer1);
     });
     this.setState({ switch1: true });
     this.setState({ isTimePickerPresent1: false });
-
-    PushNotification.cancelLocalNotifications({id: '1000'});
   }
-
+/*
   handleTimer2 = (timer2) => {
     this.setState({ timer2: timer2 });
     this.setState({ switch2: true });
     this.setState({ isTimePickerPresent2: false });
   }
-
+*/
   handleSwitch1 = (switch1) => {
     this.setState({ switch1 });
   }
-
+/*
   handleSwitch2 = (switch2) => {
     this.setState({ switch2 });
   }
-
+*/
   componentDidUpdate(prevProps) {
-    console.log('in components did mount:');
-    console.log(this.props.dbInstance);
-    customNotification = new CustomNotification(this.props.navigation, this.props.dbInstance);
+    customNotification = new CustomNotification(this.props.navigation, this.props.dbInstance, new Date(Date.now() + (10 * 1000)));
     customNotification.createNotification();
   }
 
@@ -75,35 +77,35 @@ class Sidebar extends Component {
     let notification1 = (this.state.switch1) ?
       <Icon active name="md-notifications" /> :
       <Icon active name="md-notifications-off" />;
-
+/*
     let notification2 = (this.state.switch2) ?
       <Icon active name="md-notifications" /> :
       <Icon active name="md-notifications-off" />;
-
+*/
     let textStyle1 =  (!this.state.switch1 && this.state.timer1) ?
       { color: 'grey' } : {};
-
+/*
     let textStyle2 =  (!this.state.switch2 && this.state.timer2) ?
       { color: 'grey' } : {};
-
+*/
     let timer1  = (this.state.timer1) ?
       <Text style={ textStyle1 }>{ this.state.timer1.toLocaleTimeString().slice(0, -3) }</Text> :
       <Text>Select a Time</Text>;
-
+/*
     let timer2  = (this.state.timer2) ?
       <Text>{ this.state.timer2.toLocaleTimeString().slice(0, -3) }</Text> :
       <Text>Select a Time</Text>;
-
+*/
     let defaultTime1 = (this.state.timer1) ?
       new Date(this.state.timer1) :
       new Date();
-
+/*
     let defaultTime2 = (this.state.timer2) ?
       new Date(this.state.timer2) :
       new Date();
-
+*/
     let light1 = (this.state.switch1) ? "light" : "";
-    let light2 = (this.state.switch2) ? "light" : "";
+    //let light2 = (this.state.switch2) ? "light" : "";
 
     return (
       <Container>
@@ -154,33 +156,6 @@ class Sidebar extends Component {
                 isVisible={ this.state.isTimePickerPresent1 }
                 onConfirm={ this.handleTimer1 }
                 onCancel={ this.hideTimePicker1 }
-              />
-            </ListItem>
-
-            <ListItem>
-              <Left>
-                <Button transparent>
-                  { notification2 }
-                </Button>
-                <Text>Notification 2</Text>
-              </Left>
-              <Right>
-                <Switch value={ this.state.switch2 } onValueChange={ this.handleSwitch2 }/>
-              </Right>
-            </ListItem>
-
-            <ListItem>
-              <Content>
-              <Button block bordered onPress={ this.showTimePicker2 }>
-                { timer2 }
-              </Button>
-              </Content>
-              <DateTimePicker
-                date={ defaultTime2 }
-                mode={ 'time' }
-                isVisible={ this.state.isTimePickerPresent2 }
-                onConfirm={ this.handleTimer2 }
-                onCancel={ this.hideTimePicker2 }
               />
             </ListItem>
 
