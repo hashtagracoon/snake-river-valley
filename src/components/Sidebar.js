@@ -50,6 +50,7 @@ class Sidebar extends Component {
   }
 */
   handleTimer1 = (timer1) => {
+    // save data only
     this.setState({ timer1: timer1 }, () => {
       logger(this.state.timer1);
       Notification.setStartDate(timer1);
@@ -59,6 +60,11 @@ class Sidebar extends Component {
       Notification.setEnable(true);
     });
     this.setState({ isTimePickerPresent1: false });
+
+    // setup real notification here
+    const customNotification = new CustomNotification(this.props.navigation, this.props.dbInstance, timer1);
+    customNotification.cancelNotification(); // cancel old notification, just in case
+    customNotification.createNotification();
   }
 /*
   handleTimer2 = (timer2) => {
@@ -72,7 +78,15 @@ class Sidebar extends Component {
       logger('notification1 enable = ' + switch1);
       Notification.setEnable(switch1);
 
+      const customNotification = new CustomNotification(this.props.navigation, this.props.dbInstance, this.state.timer1);
 
+      if(!switch1) {
+        customNotification.cancelNotification();
+      }
+      else {
+        customNotification.cancelNotification(); // cancel old notification, just in case
+        customNotification.createNotification();
+      }
 
     });
   }
