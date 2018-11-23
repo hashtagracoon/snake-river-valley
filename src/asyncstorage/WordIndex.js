@@ -1,5 +1,6 @@
 import to from '../api/To';
 import { AsyncStorage } from 'react-native';
+import { logger } from '../api/Debugger';
 
 module.exports = {
 
@@ -27,12 +28,12 @@ module.exports = {
     }
 
     if(err) {
-      console.log('asyncstorage setitem error:');
-      console.log(err);
+      logger('asyncstorage setitem error:');
+      logger(err);
     }
     else {
-      console.log('asyncstorage setitem success');
-      console.log('data = ' + index);
+      logger('asyncstorage setitem success');
+      logger('data = ' + index);
     }
   },
 
@@ -59,8 +60,8 @@ module.exports = {
     }
 
     if(err) {
-      console.log('asyncstorage getitem error:');
-      console.log(err);
+      logger('asyncstorage getitem error:');
+      logger(err);
     }
     else {
       data = (!data) ? 0 : data;

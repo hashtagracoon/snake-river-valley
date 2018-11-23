@@ -1,6 +1,6 @@
 import PushNotification from 'react-native-push-notification';
 import Constants from '../asyncstorage/Constants';
-import NotificationType from '../asyncstorage/NotificationType';
+import Notification from '../asyncstorage/Notification';
 import { mostCommon } from '../resources/mostCommon';
 import { ielts } from '../resources/ielts';
 import { toefl } from '../resources/toefl';
@@ -16,22 +16,22 @@ const getRandomInt = (max) => {
 
 export default class CustomNotification {
 
-  constructor(navigation, dbInstance, notificationStartTime) {
+  constructor(navigation, dbInstance, notificationStartDate) {
     this.navigation = navigation;
     this.dbInstance = dbInstance;
-    this.notificationStartTime = notificationStartTime;
+    this.notificationStartDate = notificationStartDate;
 
     this.index = 0;
   }
 
   notificationHandler = async (notification) => {
-    console.log("in notification handler:");
+    logger("In notification handler:");
     this.cancelNotification();
     const preIndex = this.index;
     this.createNotification();
 
     let routeName = 'IELTSCard';
-    let notificationType = await NotificationType.getType();
+    let notificationType = await Notification.getType();
     switch(notificationType) {
       case 'mostCommon':
         routeName = 'MostCommonCard';
@@ -81,12 +81,9 @@ export default class CustomNotification {
 
   createNotification = async () => {
 
-    console.log('in create notification');
-    console.log(this.dbInstance);
-
     let customPushNotification = this.getCustomPushNotification(this.notificationHandler);
 
-    let notificationType = await NotificationType.getType();
+    let notificationType = await Notification.getType();
 
     switch(notificationType) {
       case 'mostCommon':
@@ -129,14 +126,14 @@ export default class CustomNotification {
       default:
         break;
     }
-    if(err) console.log(err);
+    if(err) logger(err);
     title = data[0].title;
     message = data[0].meanings[0].meaning;
 
     customPushNotification.localNotificationSchedule({
       title: title,
       message: message,
-      date: this.notificationStartTime,//new Date(Date.now() + (10 * 1000)), // in 10 secs
+      date: this.notificationStartDate,//new Date(Date.now() + (10 * 1000)), // in 10 secs
       id: '1000',
       userInfo: {
         id: '1000'

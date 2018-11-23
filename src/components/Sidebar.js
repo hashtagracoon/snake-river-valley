@@ -3,7 +3,7 @@ import { Container, Content, List, ListItem, Left, Body, Right, Icon, Button, Te
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { connect } from 'react-redux';
 import CustomNotification from '../api/CustomNotification';
-import NotificationType from '../asyncstorage/NotificationType';
+import Notification from '../asyncstorage/Notification';
 import { logger } from '../api/Debugger';
 
 class Sidebar extends Component {
@@ -20,13 +20,17 @@ class Sidebar extends Component {
   }
 
   componentWillMount = async () => {
-    let notificationType = await NotificationType.getType();
+    let notificationType = await Notification.getType();
     this.setState({ selected: notificationType });
+    let notificationEnable = await Notification.getEnable();
+    this.setState({ switch1: notificationEnable });
+    let notificationStartDate = await Notification.getStartDate();
+    this.setState({ timer1: notificationStartDate });
   }
 
   onPickerValueChange = async (selected) => {
     this.setState({ selected });
-    await NotificationType.setType(selected);
+    await Notification.setType(selected);
   }
 
   showTimePicker1 = () => {
@@ -48,8 +52,12 @@ class Sidebar extends Component {
   handleTimer1 = (timer1) => {
     this.setState({ timer1: timer1 }, () => {
       logger(this.state.timer1);
+      Notification.setStartDate(timer1);
     });
-    this.setState({ switch1: true });
+    this.setState({ switch1: true }, () => {
+      logger('notification1 enabled!');
+      Notification.setEnable(true);
+    });
     this.setState({ isTimePickerPresent1: false });
   }
 /*
@@ -60,7 +68,13 @@ class Sidebar extends Component {
   }
 */
   handleSwitch1 = (switch1) => {
-    this.setState({ switch1 });
+    this.setState({ switch1 }, () => {
+      logger('notification1 enable = ' + switch1);
+      Notification.setEnable(switch1);
+
+
+
+    });
   }
 /*
   handleSwitch2 = (switch2) => {
@@ -68,8 +82,8 @@ class Sidebar extends Component {
   }
 */
   componentDidUpdate(prevProps) {
-    customNotification = new CustomNotification(this.props.navigation, this.props.dbInstance, new Date(Date.now() + (10 * 1000)));
-    customNotification.createNotification();
+    //customNotification = new CustomNotification(this.props.navigation, this.props.dbInstance, new Date(Date.now() + (10 * 1000)));
+    //customNotification.createNotification();
   }
 
   render() {
@@ -104,8 +118,6 @@ class Sidebar extends Component {
       new Date(this.state.timer2) :
       new Date();
 */
-    let light1 = (this.state.switch1) ? "light" : "";
-    //let light2 = (this.state.switch2) ? "light" : "";
 
     return (
       <Container>

@@ -63,14 +63,14 @@ class Setup extends Component {
   openDatabase = async () => {
     let [err, db] = await to(SQLite.openDatabase({name: 'wordlist.db', createFromLocation : "~/wordlist.db", location: 'Library'}));
     if(!err) {
-      console.log('Database Opened!');
+      logger('Database Opened!');
       this.props.setDbInstance(db);
       SplashScreen.hide();
-      console.log('===================== splash screen closed ========================');
+      logger('===================== splash screen closed ========================');
     }
     else {
-      console.log('Try to Open Database, but Fail......');
-      console.log(err);
+      logger('Try to Open Database, but Fail......');
+      logger(err);
     }
   }
 

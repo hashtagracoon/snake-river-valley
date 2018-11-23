@@ -61,37 +61,35 @@ export default class Menu extends Component {
         </Header>
 
         <View style={ styles.view }>
-          <Button block primary bordered onPress={ this.mostCommonOnPress }>
+          <Button block primary onPress={ this.mostCommonOnPress }>
             <Text uppercase={ false }>Most Common 3000 Words</Text>
           </Button>
         </View>
 
         <View style={ styles.view }>
-          <Button block primary bordered onPress={ this.ieltsButtonOnPress }>
+          <Button block primary onPress={ this.ieltsButtonOnPress }>
             <Text uppercase={ false }>IELTS 4000 Words</Text>
           </Button>
         </View>
 
         <View style={ styles.view }>
-          <Button block primary bordered onPress={ this.toeflButtonOnPress }>
+          <Button block primary onPress={ this.toeflButtonOnPress }>
             <Text uppercase={ false }>TOEFL 5000 Words</Text>
           </Button>
         </View>
 
         <View style={ styles.view }>
-          <Button block primary bordered onPress={ this.greButtonOnPress }>
+          <Button block primary onPress={ this.greButtonOnPress }>
             <Text uppercase={ false }>GRE 5000 Words</Text>
           </Button>
         </View>
 
         <View style={ styles.view }>
-          <Button block primary bordered onPress={ this.satButtonOnPress }>
+          <Button block primary onPress={ this.satButtonOnPress }>
             <Text uppercase={ false }>SAT 3000 Words</Text>
           </Button>
         </View>
 
-        <View style={ styles.view }>
-        </View>
         <View style={ styles.view }>
         </View>
 

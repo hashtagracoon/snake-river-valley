@@ -78,7 +78,7 @@ class IELTSCard extends Component {
   }
 
   onSwipeRight(gestureState) {
-    console.log('==> swipe right');
+    logger('==> swipe right');
     let tempIndex = (this.state.index - 1 < 0) ? this.state.index : this.state.index - 1;
     WordIndexer.setWordIndex('ielts', tempIndex);
 
