@@ -15,6 +15,12 @@ const getRandomInt = (max) => {
   return Math.floor(Math.random() * Math.floor(max));
 };
 
+const addDays = (date, days) => {
+  let result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+};
+
 export default class CustomNotification {
 
   constructor(navigation, dbInstance, notificationStartDate) {
@@ -29,6 +35,15 @@ export default class CustomNotification {
     logger("In notification handler:");
     this.cancelNotification();
     const preIndex = this.index;
+
+    const nowDate = new Date(Date.now());
+    if(this.notificationStartDate) {
+      while(this.notificationStartDate < nowDate) {
+        this.notificationStartDate = addDays(this.notificationStartDate, 1);
+      }
+      Notification.setStartDate(this.notificationStartDate);
+    }
+
     this.createNotification();
 
     let routeName = 'IELTSCard';
@@ -135,6 +150,7 @@ export default class CustomNotification {
     message = data[0].meanings[0].meaning;
 
     logger(this.notificationStartDate);
+    logger(new Date(Date.now()));
 
     customPushNotification.localNotificationSchedule({
       title: title,
