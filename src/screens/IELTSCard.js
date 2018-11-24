@@ -10,6 +10,7 @@ import Sound from 'react-native-sound';
 import WordIndexer from '../asyncstorage/WordIndex';
 import { StackActions, NavigationActions } from 'react-navigation';
 import Constants from '../asyncstorage/Constants';
+import { AdMobBanner } from 'react-native-admob';
 
 class IELTSCard extends Component {
 
@@ -185,15 +186,16 @@ class IELTSCard extends Component {
   }
 
   renderAds = () => {
-    /*
+
     return (
       <Card>
         <AdMobBanner
           bannerSize="smartBannerPortrait"
+          adSize="banner"
           adUnitID="ca-app-pub-4788516135632439/5282164079"
           didFailToReceiveAdWithError={ () => { logger("admob error"); } }/>
       </Card>
-    );*/
+    );
   }
 
   render() {
