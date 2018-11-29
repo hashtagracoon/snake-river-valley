@@ -35,6 +35,37 @@ module.exports = {
     }
   },
 
+  setIndex: async (index) => {
+    index = index.toString();
+    let err = null, data = null;
+    [err, data] = await to(AsyncStorage.setItem('notificationIndex', index));
+
+    if(err) {
+      logger('asyncstorage set notification index error:');
+      logger(err);
+    }
+    else {
+      logger('asyncstorage set notification index success');
+      logger('data = ' + data);
+    }
+  },
+
+  getIndex: async () => {
+    let err = null, data = null;
+    [err, data] = await to(AsyncStorage.getItem('notificationIndex'));
+
+    if(err) {
+      logger('asyncstorage get notification index error:');
+      logger(err);
+    }
+    else {
+      data = parseInt(data);
+      logger('asyncstorage get notification index success');
+      logger('data = ' + data);
+      return data;
+    }
+  },
+
   setStartDate: async (date) => {
     date = date.toString();
     let err = null, data = null;

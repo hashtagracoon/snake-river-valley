@@ -27,14 +27,12 @@ export default class CustomNotification {
     this.navigation = navigation;
     this.dbInstance = dbInstance;
     this.notificationStartDate = notificationStartDate;
-
-    this.index = 0;
   }
 
   notificationHandler = async (notification) => {
     logger("In notification handler:");
     this.cancelNotification();
-    const preIndex = this.index;
+    const preIndex = await Notification.getIndex();
 
     const nowDate = new Date(Date.now());
     if(this.notificationStartDate) {
@@ -110,43 +108,45 @@ export default class CustomNotification {
 
     let notificationType = await Notification.getType();
 
+    let index = 0;
     switch(notificationType) {
       case 'mostCommon':
-        this.index = getRandomInt(Constants.mostCommonLength - 1);
+        index = getRandomInt(Constants.mostCommonLength - 1);
         break;
       case 'ielts':
-        this.index = getRandomInt(Constants.ieltsLength - 1);
+        index = getRandomInt(Constants.ieltsLength - 1);
         break;
       case 'toefl':
-        this.index = getRandomInt(Constants.toeflLength - 1);
+        index = getRandomInt(Constants.toeflLength - 1);
         break;
       case 'gre':
-        this.index = getRandomInt(Constants.greLength - 1);
+        index = getRandomInt(Constants.greLength - 1);
         break;
       case 'sat':
-        this.index = getRandomInt(Constants.satLength - 1);
+        index = getRandomInt(Constants.satLength - 1);
         break;
       default:
         break;
     }
+    await Notification.setIndex(index);
 
     let title = '', message = '';
     let err = null, data = null;
     switch(notificationType) {
       case 'mostCommon':
-        [err, data] = await to(DatabaseSearcher.searchDatabase(mostCommon[this.index], this.dbInstance));
+        [err, data] = await to(DatabaseSearcher.searchDatabase(mostCommon[index], this.dbInstance));
         break;
       case 'ielts':
-        [err, data] = await to(DatabaseSearcher.searchDatabase(ielts[this.index], this.dbInstance));
+        [err, data] = await to(DatabaseSearcher.searchDatabase(ielts[index], this.dbInstance));
         break;
       case 'toefl':
-        [err, data] = await to(DatabaseSearcher.searchDatabase(toefl[this.index], this.dbInstance));
+        [err, data] = await to(DatabaseSearcher.searchDatabase(toefl[index], this.dbInstance));
         break;
       case 'gre':
-        [err, data] = await to(DatabaseSearcher.searchDatabase(gre[this.index], this.dbInstance));
+        [err, data] = await to(DatabaseSearcher.searchDatabase(gre[index], this.dbInstance));
         break;
       case 'sat':
-        [err, data] = await to(DatabaseSearcher.searchDatabase(sat[this.index], this.dbInstance));
+        [err, data] = await to(DatabaseSearcher.searchDatabase(sat[index], this.dbInstance));
         break;
       default:
         break;
