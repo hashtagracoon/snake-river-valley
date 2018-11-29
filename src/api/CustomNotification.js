@@ -96,6 +96,12 @@ export default class CustomNotification {
     PushNotification.cancelLocalNotifications({id: '1000'});
   };
 
+  initNotification = () => {
+    logger('*** INIT notification ***');
+
+    this.getCustomPushNotification(this.notificationHandler);
+  };
+
   createNotification = async () => {
 
     logger('*** CREATE notification ***');

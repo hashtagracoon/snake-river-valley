@@ -2,10 +2,15 @@ import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Drawer, Container, Header, Left, Right, Title, Icon, Content, Card, CardItem, Body, Text, Button } from 'native-base';
 import Sidebar from '../components/Sidebar';
+import CustomNotification from '../api/CustomNotification';
+import Notification from '../asyncstorage/Notification';
+import { connect } from 'react-redux';
+import { logger } from '../api/Debugger';
+import SplashScreen from 'react-native-splash-screen';
 
 Drawer.defaultProps.styles.mainOverlay.elevation = 0;
 
-export default class Menu extends Component {
+class Menu extends Component {
 
   openDrawer = () => {
     this.drawer._root.open();
@@ -37,6 +42,19 @@ export default class Menu extends Component {
 
   satButtonOnPress = () => {
     this.props.navigation.navigate('SATCard');
+  }
+
+  componentWillMount = () => {
+    SplashScreen.hide();
+  }
+
+  componentDidMount = async () => {
+    logger('*** componentDidMount ***');
+    logger(this.props.navigation);
+    logger(this.props.dbInstance);
+    logger(this.props);
+    let notificationStartDate = await Notification.getStartDate();
+    new CustomNotification(this.props.navigation, this.props.dbInstance, notificationStartDate).initNotification();
   }
 
   render() {
@@ -108,3 +126,12 @@ const styles = StyleSheet.create({
     margin: 36
   }
 });
+
+export default connect(
+  (state) => {
+    return {
+      dbInstance: state.dbState.dbInstance
+    };
+  },
+  null
+)(Menu);
