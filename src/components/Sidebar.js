@@ -106,10 +106,8 @@ class Sidebar extends Component {
 
           <List>
 
-            <ListItem itemDivider>
-              <View>
-                <Text>Notification Setup</Text>
-              </View>
+            <ListItem itemDivider style={{ backgroundColor: '#3F51B5', alignItems: 'center', justifyContent: 'center', }}>
+              <Text style={{ color: 'white', fontFamily: 'Lato-Italic' }}>Notification Setup</Text>
             </ListItem>
 
             <ListItem>
