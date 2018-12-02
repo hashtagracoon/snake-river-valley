@@ -38,26 +38,6 @@ export default class CustomNotification {
     this.cancelNotification();
     const preIndex = await Notification.getIndex();
 
-    if(this.notificationStartDate) {
-
-      const nowDate = new Date(Date.now());
-      let tempDate = new Date(this.notificationStartDate);
-      tempDate.setSeconds(tempDate.getSeconds() + nowDate.getSeconds());
-      logger('adjust notification date logic...');
-
-      logger('notification start date: ' + this.notificationStartDate);
-      logger('temp date: ' + tempDate);
-      logger('now date:' + nowDate);
-      while(tempDate < nowDate) {
-        logger('add 1 day');
-        tempDate = addDays(tempDate, 1);
-        this.notificationStartDate = addDays(this.notificationStartDate, 1);
-      }
-      logger('after adjust, notification date: ');
-      logger(this.notificationStartDate);
-      Notification.setStartDate(this.notificationStartDate);
-    }
-
     this.createNotification();
 
     let routeName = 'IELTSCard';
@@ -171,8 +151,28 @@ export default class CustomNotification {
     title = data[0].title;
     message = data[0].meanings[0].meaning;
 
-    logger(this.notificationStartDate);
-    logger(new Date(Date.now()));
+    //logger(this.notificationStartDate);
+    //logger(new Date(Date.now()));
+
+    if(this.notificationStartDate) {
+
+      const nowDate = new Date(Date.now());
+      let tempDate = new Date(this.notificationStartDate);
+      tempDate.setSeconds(tempDate.getSeconds() + nowDate.getSeconds());
+      logger('adjust notification date logic...');
+
+      logger('notification start date: ' + this.notificationStartDate);
+      logger('temp date: ' + tempDate.getTime() / 1000);
+      logger('now date:' + nowDate.getTime() / 1000);
+      while(Math.round(tempDate.getTime() / 1000) < Math.round(nowDate.getTime() / 1000)) {
+        logger('add 1 day');
+        tempDate = addDays(tempDate, 1);
+        this.notificationStartDate = addDays(this.notificationStartDate, 1);
+      }
+      logger('after adjust, notification date: ');
+      logger(this.notificationStartDate);
+      Notification.setStartDate(this.notificationStartDate);
+    }
 
     customPushNotification.localNotificationSchedule({
       title: title,

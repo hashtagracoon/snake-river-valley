@@ -50,9 +50,6 @@ class Menu extends Component {
 
   componentDidMount = async () => {
     logger('*** componentDidMount ***');
-    logger(this.props.navigation);
-    logger(this.props.dbInstance);
-    logger(this.props);
     let notificationStartDate = await Notification.getStartDate();
     new CustomNotification(this.props.navigation, this.props.dbInstance, notificationStartDate).initNotification();
   }
