@@ -29,16 +29,32 @@ export default class CustomNotification {
     this.notificationStartDate = notificationStartDate;
   }
 
+  setNotificationStartDate = (notificationStartDate) => {
+    this.notificationStartDate = notificationStartDate;
+  }
+
   notificationHandler = async (notification) => {
     logger("In notification handler:");
     this.cancelNotification();
     const preIndex = await Notification.getIndex();
 
-    const nowDate = new Date(Date.now());
     if(this.notificationStartDate) {
-      while(this.notificationStartDate < nowDate) {
+
+      const nowDate = new Date(Date.now());
+      let tempDate = new Date(this.notificationStartDate);
+      tempDate.setSeconds(tempDate.getSeconds() + nowDate.getSeconds());
+      logger('adjust notification date logic...');
+
+      logger('notification start date: ' + this.notificationStartDate);
+      logger('temp date: ' + tempDate);
+      logger('now date:' + nowDate);
+      while(tempDate < nowDate) {
+        logger('add 1 day');
+        tempDate = addDays(tempDate, 1);
         this.notificationStartDate = addDays(this.notificationStartDate, 1);
       }
+      logger('after adjust, notification date: ');
+      logger(this.notificationStartDate);
       Notification.setStartDate(this.notificationStartDate);
     }
 
