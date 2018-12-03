@@ -36,8 +36,6 @@ const handleWordCacheType = (wordCache, state) => {
 const handleWordCacheOperation = (wordCache, deque) => {
   switch(wordCache.operation) {
     case "PUSH":
-      console.log("PUSH");
-      console.log(wordCache.content);
       deque.push(wordCache.content);
       break;
     case "UNSHIFT":

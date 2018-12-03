@@ -1,4 +1,4 @@
-const _debug = true;
+const _debug = false;
 
 module.exports = {
   logger: (output) => {
