@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { StyleSheet } from 'react-native';
 import { Container, Content, View, List, ListItem, Left, Body, Right, Icon, Button, Text, Switch, Picker } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { connect } from 'react-redux';
@@ -94,7 +95,7 @@ class Sidebar extends Component {
 
     let timer  = (this.state.notificationStartDate) ?
       <Text style={ textStyle }>{ this.state.notificationStartDate.toLocaleTimeString().slice(0, -3) }</Text> :
-      <Text>Select a Time</Text>;
+      <Text uppercase={ false }>Set Time</Text>;
 
     let defaultTime = (this.state.notificationStartDate) ?
       new Date(this.state.notificationStartDate) :
@@ -107,7 +108,7 @@ class Sidebar extends Component {
           <List>
 
             <ListItem itemDivider style={{ backgroundColor: '#3F51B5', alignItems: 'center', justifyContent: 'center', }}>
-              <Text style={{ color: 'white', fontFamily: 'Lato-Italic' }}>Notification Setup</Text>
+              <Text style={{ color: 'white', fontFamily: 'Lato-Bold' }}>Notification Setup</Text>
             </ListItem>
 
             <ListItem>
@@ -130,7 +131,7 @@ class Sidebar extends Component {
                 <Button transparent>
                   { notification }
                 </Button>
-                <Text>Notification</Text>
+                <Text style={{ fontFamily: 'sans-serif-light' }}>Notification 1</Text>
               </Left>
               <Right>
                 <Switch value={ this.state.notificationEnable } onValueChange={ this.handleSwitch }/>
@@ -160,6 +161,12 @@ class Sidebar extends Component {
   }
 
 }
+
+const styles = StyleSheet.create({
+  text: {
+    fontFamily: 'sans-serif-light'
+  }
+});
 
 export default connect(
   (state) => {

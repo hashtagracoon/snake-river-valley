@@ -10,6 +10,7 @@ import Sound from 'react-native-sound';
 import WordIndexer from '../asyncstorage/WordIndex';
 import { StackActions, NavigationActions } from 'react-navigation';
 import Constants from '../asyncstorage/Constants';
+import { AdMobBanner } from 'react-native-admob';
 
 class MostCommonCard extends Component {
 
@@ -23,7 +24,6 @@ class MostCommonCard extends Component {
     logger('current index = ' + index);
     logger('current word = ' + mostCommon[index]);
     let [err, data] = await to(DatabaseSearcher.searchDatabase(mostCommon[index], this.props.dbInstance));
-    logger('await search for word done !');
 
     if(!err) {
       this.setState({ data });
@@ -35,7 +35,14 @@ class MostCommonCard extends Component {
   }
 
   componentWillMount = async () => {
-    const index = await WordIndexer.getWordIndex('mostCommon');
+    let index = 0;
+    if(this.props.navigation.state.params && this.props.navigation.state.params.index) {
+      index = this.props.navigation.state.params.index;
+      WordIndexer.setWordIndex('mostCommon', index);
+    }
+    else {
+      index = await WordIndexer.getWordIndex('mostCommon');
+    }
     this.setState({ index });
     this.searchForWord(index);
   }
@@ -72,7 +79,7 @@ class MostCommonCard extends Component {
   }
 
   onSwipeRight(gestureState) {
-    console.log('==> swipe right');
+    logger('==> swipe right');
     let tempIndex = (this.state.index - 1 < 0) ? this.state.index : this.state.index - 1;
     WordIndexer.setWordIndex('mostCommon', tempIndex);
 
@@ -134,12 +141,12 @@ class MostCommonCard extends Component {
 
             <CardItem header bordered>
               <Text>{ entry.title }</Text>
+              { this.renderMp3(entry.mp3) }
             </CardItem>
 
             <CardItem bordered>
               <Text>{ entry.pos }{ entry.gram }  </Text>
               { this.renderPron(entry.pron) }
-              { this.renderMp3(entry.mp3) }
             </CardItem>
 
             { this.renderMeanings(entry.meanings) }
@@ -179,15 +186,16 @@ class MostCommonCard extends Component {
   }
 
   renderAds = () => {
-    /*
+
     return (
       <Card>
         <AdMobBanner
           bannerSize="smartBannerPortrait"
-          adUnitID="ca-app-pub-4788516135632439/5282164079"
-          didFailToReceiveAdWithError={ () => { logger("admob error"); } }/>
+          adSize="banner"
+          adUnitID="ca-app-pub-4788516135632439/6769623022"
+          didFailToReceiveAdWithError={ () => { logger("&&& admob error &&&"); } }/>
       </Card>
-    );*/
+    );
   }
 
   render() {
@@ -212,7 +220,7 @@ class MostCommonCard extends Component {
         </Container>
       );
     }
-    else if(data[0].from === "Cambridge") {
+    else {
       logger("Can Render Result Now.");
       logger(data);
       return (
@@ -232,8 +240,8 @@ class MostCommonCard extends Component {
               </Button>
             </Left>
             <Body style={{ flex: 2, alignItems: 'center' }}>
-              <Text style={{ color: 'white' }}>{this.state.data[0].title}</Text>
-              <Text style={{ color: 'white' }}>{ this.state.index + 1 } / { Constants.mostCommonLength }</Text>
+              <Text style={{ color: 'white', fontFamily: 'Lato-Bold' }}>{this.state.data[0].title}</Text>
+              <Text style={{ color: 'white', fontFamily: 'Lato-Bold' }}>{ this.state.index + 1 } / { Constants.mostCommonLength }</Text>
             </Body>
             <Right style={{ flex: 1 }}></Right>
           </Header>

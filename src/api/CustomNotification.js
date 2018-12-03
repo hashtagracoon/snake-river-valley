@@ -164,7 +164,7 @@ export default class CustomNotification {
       logger('notification start date: ' + this.notificationStartDate);
       logger('temp date: ' + tempDate.getTime() / 1000);
       logger('now date:' + nowDate.getTime() / 1000);
-      while(Math.round(tempDate.getTime() / 1000) < Math.round(nowDate.getTime() / 1000)) {
+      while(Math.floor(tempDate.getTime() / 1000) < Math.ceil(nowDate.getTime() / 1000)) {
         logger('add 1 day');
         tempDate = addDays(tempDate, 1);
         this.notificationStartDate = addDays(this.notificationStartDate, 1);

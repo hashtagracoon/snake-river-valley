@@ -71,37 +71,37 @@ class Menu extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>Daily Vocabulary</Title>
+            <Title style={{ fontFamily: 'Lato-Bold' }}>Daily Vocabulary</Title>
           </Body>
         </Header>
 
         <View style={ styles.view }>
           <Button block primary onPress={ this.mostCommonOnPress }>
-            <Text uppercase={ false }>Most Common 3000 Words</Text>
+            <Text uppercase={ false } style={ styles.text }>Most Common 3000 Words</Text>
           </Button>
         </View>
 
         <View style={ styles.view }>
           <Button block primary onPress={ this.ieltsButtonOnPress }>
-            <Text uppercase={ false }>IELTS 4000 Words</Text>
+            <Text uppercase={ false } style={ styles.text }>IELTS 4000 Words</Text>
           </Button>
         </View>
 
         <View style={ styles.view }>
           <Button block primary onPress={ this.toeflButtonOnPress }>
-            <Text uppercase={ false }>TOEFL 5000 Words</Text>
+            <Text uppercase={ false } style={ styles.text }>TOEFL 5000 Words</Text>
           </Button>
         </View>
 
         <View style={ styles.view }>
           <Button block primary onPress={ this.greButtonOnPress }>
-            <Text uppercase={ false }>GRE 5000 Words</Text>
+            <Text uppercase={ false } style={ styles.text }>GRE 5000 Words</Text>
           </Button>
         </View>
 
         <View style={ styles.view }>
           <Button block primary onPress={ this.satButtonOnPress }>
-            <Text uppercase={ false }>SAT 3000 Words</Text>
+            <Text uppercase={ false } style={ styles.text }>SAT 3000 Words</Text>
           </Button>
         </View>
 
@@ -121,6 +121,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     margin: 36
+  },
+  text: {
+    fontFamily: 'sans-serif-light'
   }
 });
 

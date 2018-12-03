@@ -141,12 +141,12 @@ class IELTSCard extends Component {
 
             <CardItem header bordered>
               <Text>{ entry.title }</Text>
+              { this.renderMp3(entry.mp3) }
             </CardItem>
 
             <CardItem bordered>
               <Text>{ entry.pos }{ entry.gram }  </Text>
               { this.renderPron(entry.pron) }
-              { this.renderMp3(entry.mp3) }
             </CardItem>
 
             { this.renderMeanings(entry.meanings) }
@@ -192,8 +192,8 @@ class IELTSCard extends Component {
         <AdMobBanner
           bannerSize="smartBannerPortrait"
           adSize="banner"
-          adUnitID="ca-app-pub-4788516135632439/5282164079"
-          didFailToReceiveAdWithError={ () => { logger("admob error"); } }/>
+          adUnitID="ca-app-pub-4788516135632439/6769623022"
+          didFailToReceiveAdWithError={ () => { logger("&&& admob error &&&"); } }/>
       </Card>
     );
   }
@@ -240,8 +240,8 @@ class IELTSCard extends Component {
               </Button>
             </Left>
             <Body style={{ flex: 2, alignItems: 'center' }}>
-              <Text style={{ color: 'white' }}>{this.state.data[0].title}</Text>
-              <Text style={{ color: 'white' }}>{ this.state.index + 1 } / { Constants.ieltsLength }</Text>
+              <Text style={{ color: 'white', fontFamily: 'Lato-Bold' }}>{this.state.data[0].title}</Text>
+              <Text style={{ color: 'white', fontFamily: 'Lato-Bold' }}>{ this.state.index + 1 } / { Constants.ieltsLength }</Text>
             </Body>
             <Right style={{ flex: 1 }}></Right>
           </Header>
